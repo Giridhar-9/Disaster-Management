@@ -42,6 +42,13 @@ nav{
     font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
     font-weight: 500;
 }
+.navLinks a:hover{
+   
+    color:white;
+    font-weight: 600;
+    font-size: large;
+    transition: 200ms linear;
+}
 .VSnav h5{
     margin-top: 8px;
 }
@@ -56,9 +63,4 @@ nav{
     color:white;
     border-radius: 3px;
     text-align: center;
-}
-input[type="search"]{
-    background-color: rgba(3, 3, 12, 0.925);
-    border: 1px solid rgba(220, 220, 220, 0.717);
-    padding:5px;
 }
