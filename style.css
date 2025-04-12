@@ -228,3 +228,14 @@ footer{
   .icons img{
     border-radius: 2px;
   }
+  .about{
+    width:90%;
+    border: 1px solid rgba(160, 160, 161, 0.799);
+    padding:20px;
+    border-radius: 10px;
+    margin: auto;
+    background-color: #0b243e;
+  }
+  .about h2{
+    text-align: center;
+  }
