@@ -1,16 +1,22 @@
-.precContainer{
-    display: grid;
-    grid-template-columns: auto auto auto auto;
-    gap:50px;
+main {
+    padding: 10px;
 }
 
-.precItem{
-    width:300px;
-    height:300px;
-    border: 1px solid ghostwhite;
-border-radius: 10px;
-text-align: center;
+.precContainer {
+    display: grid;
+    grid-template-columns: auto auto auto auto;
+    gap: 50px;
+    padding: 10px;
 }
-.precItem img{
-    border-radius: 10px 10px 0 0 ;
+
+.precItem>img {
+    border-radius: 10px;
+}
+
+.precItem {
+    width: 300px;
+    height: 300px;
+    border: 1px solid ghostwhite;
+    border-radius: 10px;
+    text-align: center;
 }
