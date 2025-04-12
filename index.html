@@ -9,80 +9,84 @@
 </head>
 
 <body>
-    <nav>
-        <div class="navCon1">
-          <div class="VSnav">  
-            <h5>CrisisGaurd</h5>
+  <nav>
+    <div class="navCon1">
+      <div class="VSnav">
+        <h5>CrisisGaurd</h5>
+      </div>
+      <div class="navLinks">
+        <a href="index.html">Home</a>
+        <a onclick="window.open('news.html', '_blank')">News</a>
+        <a onclick="window.open('measures.html', '_blank')">Precautions</a>
+        <a href="map.html">Map</a>
+        <a href="#">About us</a>
+      </div>
+    </div>
+    <div class="navCon2">
+      <button class="download" onclick="window.open('login.html', '_blank')">Rescue!</button>
+    </div>
+  </nav><br>
+  <main>
+    <div class="slidingCards">
+      <button id="prevBtn">
+        << /button>
+          <div class="video-container">
+
+            <div class="video-item active">
+              <b class="videoTitle">Latest News</b>
+              <img src="Images/tsunami 2004_..so many souls lost all over the…"
+                onclick="window.open('news.html', '_blank')">
+            </div>
+
+            <div class="video-item">
+              <b class="videoTitle">Alerts</b>
+              <img src="Images/alert2.png" onclick="window.open('alert.html', '_blank')">
+            </div>
+
+            <div class="video-item">
+              <b class="videoTitle">Safety Measures</b>
+              <img src="Images/precautions.png" onclick="window.open('measures.html', '_blank')">
+
+            </div>
           </div>
-          <div class="navLinks">
-            <a href="index.html">Home</a>
-            <a onclick="window.open('news.html', '_blank')">News</a>
-            <a onclick="window.open('measures.html', '_blank')">Precautions</a>
-            <a href="map.html">Map</a>
-            <a href="#">About us</a>
-          </div>
+          <button id="nextBtn">></button>
+    </div><br>
+    <div class="about">
+      <h2 style="text-align: center;">About Us</h2>
+      <p>CrisisGaurd is an organisation that has main goal of saving people from disasters.User can access various types
+        of data or even raise an alert when there is a disaster occuring at his/her place. This website contains
+        sections like NEWS, MAP and precautions.</p>
+      <p>MAP shows all the areas where disasters are occuring at real-time </p>
+      <p>NEWS contains the latest updates going around the world </p>
+      <p>Precautions contains all the necessary precautions needed to be taken care when a disaster occurs</p>
+    </div>
+  </main>
+  <footer>
+    <div class="footer">
+      <div class="footCon1">
+        <h1>Quick Links</h1><br>
+        <ul>
+          <li><a href="index.html">Home</a></li>
+          <li><a href="index.html">About</a></li>
+          <li><a href="news.html">News</a></li>
+          <li><a href="measures.html">Precautions</a></li>
+        </ul>
+      </div>
+      <div class="footCon2">
+        <h1>Newsletter Subscription</h1>
+        <input type="email" placeholder="Enter Email">
+      </div>
+      <div class="footCon3">
+        <h1>We are Social</h1><br>
+        <div class="icons">
+          <img src="images/twitter.png" width="33">
+          <img src="Images/insta.jpg" width="33">
         </div>
-        <div class="navCon2">
-          <button class="download" onclick="window.open('login.html', '_blank')">Rescue!</button>
-        </div>
-      </nav><br>
-      <main>
-           <div class="slidingCards">
-            <button id="prevBtn"><</button>
-            <div class="video-container">
-               
-                <div class="video-item active">
-                    <b class="videoTitle">Latest News</b>
-                    <img src="Images/tsunami 2004_..so many souls lost all over the…" onclick="window.open('news.html', '_blank')">
-                </div>
-              
-                <div class="video-item">
-                    <b class="videoTitle">Alerts</b>
-                    <img src="Images/alert2.png" onclick="window.open('alert.html', '_blank')">
-                </div>
-               
-                <div class="video-item">
-                     <b class="videoTitle">Safety Measures</b>
-                    <img src="Images/precautions.png" onclick="window.open('measures.html', '_blank')">
-                   
-                </div>
-            </div>
-                <button id="nextBtn">></button>
-            </div><br>
-            <div class="about">
-              <h2  style="text-align: center;">About Us</h2>
-                      <p>CrisisGaurd is an organisation that has main goal of saving people from disasters.User can access various types of data or even raise an alert when there is a disaster occuring at his/her place. This website contains sections like NEWS, MAP and precautions.</p>
-<p>MAP shows all the areas where disasters are occuring at real-time </p>
-<p>NEWS contains the latest updates going around the world </p>
-<p>Precautions contains all the necessary precautions needed to be taken care when a disaster occurs</p>
-            </div>
-      </main>
-      <footer>
-        <div class="footer">
-            <div class="footCon1">
-                <h1>Quick Links</h1><br>
-                <ul>
-                    <li><a href="index.html">Home</a></li>
-                    <li><a href="index.html">About</a></li>
-                    <li><a href="news.html">News</a></li>
-                    <li><a href="measures.html">Precautions</a></li>
-                </ul>
-            </div>
-            <div class="footCon2">
-                <h1>Newsletter Subscription</h1>
-                <input type="email" placeholder="Enter Email">
-            </div>
-           <div class="footCon3">
-            <h1>We are Social</h1><br>
-            <div class="icons">
-               <img src="images/twitter.png" width="33" >
-               <img src="Images/insta.jpg" width="33">
-            </div>
-           </div>
-        </div><br>
-        <h3>Copyright © 2025 CrisisGaurd | All Rights Reserved.</h3>
-    </footer>
-      <script src="demo.js"></script>
+      </div>
+    </div><br>
+    <h3>Copyright © 2025 CrisisGaurd | All Rights Reserved.</h3>
+  </footer>
+  <script src="demo.js"></script>
 </body>
 
 </html>
