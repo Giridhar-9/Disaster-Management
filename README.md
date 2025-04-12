@@ -10,4 +10,4 @@ Pitch: [pitch]
 * The application provides facilities like Live News Updates, Precautions, Live Map.
 * The Live News webpage provides news updates on the disasters occuring currently along with general news articles using the News API.
 * The Precautions webpage provides basic precautions that the victims can follow when disaster strikes.
-* Live Map feature allows users to find out disaster struck areas and their effect radius, alerting the residents living within the radius ultimately saving the residents.
+* Live Map feature allows users to find out disaster struck areas and their effect radius, alerting the residents living within the radius ultimately saving the residents, the map is accessed by Cesium API, and the affected regions are detected by Open Weather API.
