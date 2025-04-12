@@ -9,37 +9,57 @@
 </head>
 
 <body>
-  <nav>
-    <div class="navCon1">
-      <div class="VSnav">
-
-        <h5>Visual Studio Code</h5>
-      </div>
-      <div class="navLinks">
-        <a href="#">Home</a>
-        <a href="#">News</a>
-        <a href="#">Alerts</a>
-        <a href="#">Map</a>
-        <a href="#">About us</a>
-      </div>
-    </div>
-    <div class="navCon2">
-      <button class="download">Raise an Alert</button>
-    </div>
-  </nav>
-  <footer>
-    <div class="footer">
-      <div class="quick-links">
-        <h3>Quick Links</h3>
-        <ul>
-          <li>Home</li>
-          <li>Alerts</li>
-          <li>Map</li>
-        </ul>
-      </div>
-    </div>
-    <div class="copy">copyright &copy; 2025 night_owls | All rights are reserved</div>
-  </footer>
+    <nav>
+        <div class="navCon1">
+          <div class="VSnav">
+            
+            <h5>Visual Studio Code</h5>
+          </div>
+          <div class="navLinks">
+            <a href="#">Home</a>
+            <a href="#">News</a>
+            <a href="#">Alerts</a>
+            <a href="#">Map</a>
+            <a href="#">About us</a>
+          </div>
+        </div>
+        <div class="navCon2">
+          <button class="download">Raise an Alert</button>
+        </div>
+      </nav><br>
+      <main>
+           <div class="slidingCards">
+            <button id="prevBtn"><</button>
+            <div class="video-container">
+               
+                <div class="video-item active">
+                    <video >
+                        <source src="https://www.w3schools.com/html/mov_bbb.mp4" type="video/mp4" autoplay loop muted>
+                        Your browser does not support the video tag.
+                    </video>
+                    <!-- <b class="videoTitle">video 1</b> -->
+                </div>
+              
+                <div class="video-item">
+                    <video >
+                        <source src="https://www.w3schools.com/html/movie.mp4" type="video/mp4" autoplay loop muted>
+                        Your browser does not support the video tag.
+                    </video>
+                    <!-- <b class="videoTitle">video 2</b> -->
+                </div>
+               
+                <div class="video-item">
+                    <video >
+                        <source src="https://sample-videos.com/video123/mp4/720/big_buck_bunny_720p_1mb.mp4" type="video/mp4" autoplay loop muted>
+                        Your browser does not support the video tag.
+                    </video><br>
+                    <!-- <b class="videoTitle">video 3</b> -->
+                </div>
+            </div>
+                <button id="nextBtn">></button>
+            </div>
+      </main>
+      <script src="JS.js"></script>
 </body>
 
 </html>
