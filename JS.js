@@ -8,11 +8,10 @@ const videoItems = document.querySelectorAll('.video-item');
             videoItems.forEach((item, index) => {
                 if (index === currentIndex) {
                     item.classList.add('active');
-                    item.querySelector('video').currentTime = 0; // Reset video to start
-                    item.querySelector('video').pause(); // Pause video when switching
+                   // Pause video when switching
                 } else {
                     item.classList.remove('active');
-                    item.querySelector('video').pause(); // Pause non-active videos
+                    // Pause non-active videos
                 }
             });
 
