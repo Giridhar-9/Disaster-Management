@@ -6,7 +6,6 @@
   <title>3D Earth - Weather, Disasters, Drought</title>
   <script src="https://cesium.com/downloads/cesiumjs/releases/1.104/Build/Cesium/Cesium.js"></script>
   <link href="https://cesium.com/downloads/cesiumjs/releases/1.104/Build/Cesium/Widgets/widgets.css" rel="stylesheet" />
-  <link rel="stylesheet" href="style.css" />
   <style>
     html, body {
       margin: 0;
@@ -16,7 +15,6 @@
       overflow: hidden;
     }
 
-    /* Navbar height is assumed 70px */
     #cesiumContainer {
       position: absolute;
       top: 70px;
@@ -27,59 +25,57 @@
     }
 
     nav {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 70px;
-  background-color: #0d1117;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 0 20px;
-  z-index: 1000;
-  color: white;
-  box-sizing: border-box;
-}
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 70px;
+      background-color: #0d1117;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0 20px;
+      z-index: 1000;
+      color: white;
+      box-sizing: border-box;
+    }
 
-.navCon1 {
-  display: flex;
-  align-items: center;
-  gap: 30px;
-}
+    .navCon1 {
+      display: flex;
+      align-items: center;
+      gap: 30px;
+    }
 
-.VSnav h5 {
-  margin: 0;
-  font-size: 16px;
-  font-weight: 600;
-}
+    .VSnav h5 {
+      margin: 0;
+      font-size: 16px;
+      font-weight: 600;
+    }
 
-.navLinks a {
-  color: white;
-  margin-right: 20px;
-  text-decoration: none;
-  font-weight: 500;
-}
+    .navLinks a {
+      color: white;
+      margin-right: 20px;
+      text-decoration: none;
+      font-weight: 500;
+    }
 
-.navLinks a:hover {
-  text-decoration: underline;
-}
+    .navLinks a:hover {
+      text-decoration: underline;
+    }
 
-.navCon2 .download {
-  background-color: #d73a49;
-  color: white;
-  padding: 8px 14px;
-  border: none;
-  border-radius: 6px;
-  font-size: 14px;
-  cursor: pointer;
-  height: 40px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-
+    .navCon2 .download {
+      background-color: #d73a49;
+      color: white;
+      padding: 8px 14px;
+      border: none;
+      border-radius: 6px;
+      font-size: 14px;
+      cursor: pointer;
+      height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
 
     .legend {
       position: absolute;
@@ -105,7 +101,7 @@
   </style>
 </head>
 <body>
-  <!-- Exact same nav as Home Page -->
+
   <nav>
     <div class="navCon1">
       <div class="VSnav">
@@ -114,8 +110,8 @@
       <div class="navLinks">
         <a href="index.html">Home</a>
         <a onclick="window.open('news.html', '_blank')">News</a>
-        <a onclick="window.open('measures.html', '_blank')">Precautions</a>
-        <a href="map.html">Map</a>
+        <a onclick="window.open('alert.html', '_blank')">Alerts</a>
+        <a href="#">Map</a>
         <a href="#">About us</a>
       </div>
     </div>
@@ -124,10 +120,8 @@
     </div>
   </nav>
 
-  <!-- Cesium Map Container -->
   <div id="cesiumContainer"></div>
 
-  <!-- Legend -->
   <div class="legend">
     <strong>Legend</strong><br>
     <span style="background:red;"></span> Earthquake<br>
@@ -139,7 +133,6 @@
     <span style="background:yellow;"></span> Drought<br>
   </div>
 
-  <!-- Cesium & Data Script (unchanged) -->
   <script>
     Cesium.Ion.defaultAccessToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiIzNDA5MjQ2Yi02YWMwLTRlNDMtODdmZC0wZmYzMTM3MGU4ZjAiLCJpZCI6MjkzNDEzLCJpYXQiOjE3NDQ0NTQzMjZ9.iwVAVMqR7F1jpeORAEZpG2-7IWcs_X063naaD70S1Uw';
     const OPENWEATHERMAP_KEY = '94dcbaa4e75b1671410a6606a9684470';
@@ -159,19 +152,24 @@
       .then(res => res.json())
       .then(data => {
         data.features.forEach(eq => {
-          const [lon, lat] = eq.geometry.coordinates;
+          const coords = eq.geometry.coordinates;
           const mag = eq.properties.mag;
           const place = eq.properties.place;
 
-          viewer.entities.add({
-            position: Cesium.Cartesian3.fromDegrees(lon, lat),
-            ellipse: {
-              semiMinorAxis: mag * 10000,
-              semiMajorAxis: mag * 10000,
-              material: Cesium.Color.RED.withAlpha(0.5)
-            },
-            description: `🌍 <b>Earthquake</b><br>Magnitude: ${mag}<br>${place}`
-          });
+          const lon = parseFloat(coords[0]);
+          const lat = parseFloat(coords[1]);
+
+          if (!isNaN(mag) && !isNaN(lat) && !isNaN(lon)) {
+            viewer.entities.add({
+              position: Cesium.Cartesian3.fromDegrees(lon, lat),
+              ellipse: {
+                semiMinorAxis: Math.max(mag * 10000, 5000),
+                semiMajorAxis: Math.max(mag * 10000, 5000),
+                material: Cesium.Color.RED.withAlpha(0.5)
+              },
+              description: `🌍 <b>Earthquake</b><br>Magnitude: ${mag}<br>${place}`
+            });
+          }
         });
       });
 
@@ -184,6 +182,7 @@
           const cols = row.split(',');
           const lat = parseFloat(cols[0]);
           const lon = parseFloat(cols[1]);
+
           if (!isNaN(lat) && !isNaN(lon)) {
             viewer.entities.add({
               position: Cesium.Cartesian3.fromDegrees(lon, lat),
@@ -215,8 +214,8 @@
 
             let color = Cesium.Color.BLUE;
             if (weather.toLowerCase().includes("rain")) color = Cesium.Color.LIGHTBLUE;
-            if (windSpeed > 6) color = Cesium.Color.GREEN;
-            if (weather.toLowerCase().includes("thunderstorm")) color = Cesium.Color.PURPLE;
+            else if (weather.toLowerCase().includes("thunderstorm")) color = Cesium.Color.PURPLE;
+            else if (windSpeed > 6) color = Cesium.Color.GREEN;
 
             viewer.entities.add({
               position: Cesium.Cartesian3.fromDegrees(lon, lat),
@@ -231,7 +230,7 @@
       }
     }, Cesium.ScreenSpaceEventType.LEFT_CLICK);
 
-    // Drought markers
+    // Drought regions
     const droughtRegions = [
       { lat: 28.6, lon: 77.2, region: "Delhi, India" },
       { lat: 35.7, lon: -119.4, region: "California, USA" },
@@ -239,16 +238,19 @@
     ];
 
     droughtRegions.forEach(d => {
-      viewer.entities.add({
-        position: Cesium.Cartesian3.fromDegrees(d.lon, d.lat),
-        ellipse: {
-          semiMinorAxis: 40000,
-          semiMajorAxis: 40000,
-          material: Cesium.Color.YELLOW.withAlpha(0.4)
-        },
-        description: `🌾 <b>Drought Region</b><br>${d.region}`
-      });
+      if (!isNaN(d.lat) && !isNaN(d.lon)) {
+        viewer.entities.add({
+          position: Cesium.Cartesian3.fromDegrees(d.lon, d.lat),
+          ellipse: {
+            semiMinorAxis: 40000,
+            semiMajorAxis: 40000,
+            material: Cesium.Color.YELLOW.withAlpha(0.4)
+          },
+          description: `🌾 <b>Drought Region</b><br>${d.region}`
+        });
+      }
     });
   </script>
+
 </body>
 </html>
