@@ -35,3 +35,18 @@ nextBtn.addEventListener('click', () => {
 
 // Initialize the display
 updateVideoDisplay();
+
+
+const menuIcon = document.querySelector('#menu');
+        const navMenu = document.getElementById('navMenu');
+
+        menuIcon.addEventListener('click', () => {
+            navMenu.classList.toggle('active');
+        });
+
+        const navLinks = document.querySelectorAll('.nav a');
+        navLinks.forEach(link => {
+            link.addEventListener('click', () => {
+                navMenu.classList.remove('active');
+            });
+        });
