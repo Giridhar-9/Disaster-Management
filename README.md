@@ -1,5 +1,5 @@
 # Disaster-Management
-Presentation: [Presesentation]()<br />
+Presentation: [Presesentation](https://drive.google.com/file/d/1-RON6HUFNFoDA_s5Ci2FJ3UtLlZ2uM2k/view?usp=sharing)<br />
 Pitch: [pitch]
 ## Description
 1. A Victim who is affected by the disaster firstly presses the "Rescue!" button which redirects to the sign up page.
