@@ -54,6 +54,7 @@ nav {
         font-weight: 600;
         font-size: large;
         transition: 200ms linear;
+        cursor: pointer;
     }
 }
 
@@ -188,6 +189,7 @@ footer{
     text-align: center;
     padding: 20px;
     max-width: 100%;
+    margin-top: 10px;
   }
   .footer{
     flex-direction: row;
@@ -235,7 +237,7 @@ footer{
     border: 1px solid rgba(160, 160, 161, 0.799);
     padding:20px;
     border-radius: 10px;
-    margin: auto;
+    margin: auto auto auto auto;
     background-color: #0b243e;
   }
   .about h2{
