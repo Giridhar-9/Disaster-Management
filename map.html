@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -7,7 +8,8 @@
   <script src="https://cesium.com/downloads/cesiumjs/releases/1.104/Build/Cesium/Cesium.js"></script>
   <link href="https://cesium.com/downloads/cesiumjs/releases/1.104/Build/Cesium/Widgets/widgets.css" rel="stylesheet" />
   <style>
-    html, body {
+    html,
+    body {
       margin: 0;
       padding: 0;
       height: 100%;
@@ -88,7 +90,7 @@
       font-size: 14px;
       z-index: 1000;
       line-height: 1.6;
-      box-shadow: 0 0 8px rgba(0,0,0,0.3);
+      box-shadow: 0 0 8px rgba(0, 0, 0, 0.3);
     }
 
     .legend span {
@@ -100,6 +102,7 @@
     }
   </style>
 </head>
+
 <body>
 
   <nav>
@@ -197,7 +200,7 @@
       });
 
     // Weather on click
-    viewer.screenSpaceEventHandler.setInputAction(function(click) {
+    viewer.screenSpaceEventHandler.setInputAction(function (click) {
       const cartesian = viewer.camera.pickEllipsoid(click.position, viewer.scene.globe.ellipsoid);
       if (cartesian) {
         const cartographic = Cesium.Cartographic.fromCartesian(cartesian);
@@ -253,4 +256,5 @@
   </script>
 
 </body>
+
 </html>
