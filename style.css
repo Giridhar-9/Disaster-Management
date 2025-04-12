@@ -169,7 +169,7 @@ button:disabled {
     cursor: not-allowed;
 }
 
-footer{
+/* footer{
     position: absolute;
     bottom: 0px;
     border-top: 1px solid rgba(220, 220, 220, 0.416);
@@ -201,4 +201,50 @@ footer{
 footer .copy{
     padding: 2px;
     text-align: center;
-}
+} */
+footer{
+    background-color: rgb(5, 37, 69);
+    color: white;
+    text-align: center;
+    padding: 20px;
+    max-width: 100%;
+  }
+  .footer{
+    flex-direction: row;
+    display: flex;
+    justify-content: space-evenly;
+    padding:20px 20px 50px 20px;
+  }
+  .footCon1 ul{
+    list-style-type:none;
+    line-height: 30px;
+  }
+  .footCon1 a{
+    text-decoration: none;
+    color: white;
+    font-size: larger;
+  }
+  .footCon1 a:hover{
+    text-decoration: underline;
+  }
+  .footCon1 a:active{
+    color: purple;
+  }
+
+  .footCon2{
+    line-height: 40px;
+  }
+  input[type="email"]{
+      width:80%;
+      padding:8px;
+      border-radius: 10px;
+      border: none;
+  }
+  .icons{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+  }
+  .icons img{
+    border-radius: 2px;
+  }
