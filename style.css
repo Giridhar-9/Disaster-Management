@@ -1,66 +1,80 @@
-*{
-    margin:0;
-    padding:0;
+* {
+    margin: 0;
+    padding: 0;
     box-sizing: border-box;
 }
-body{
+
+body {
     background-color: rgba(1, 3, 14, 0.943);
-    color:white;
+    color: white;
     justify-content: center;
     align-items: center;
     font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
 }
-nav{
+
+nav {
     background-color: rgba(1, 3, 14, 0.934);
     display: flex;
     flex-direction: row;
     justify-content: space-between;
-    padding:10px;
+    padding: 10px;
     position: fixed;
     width: 100%;
     z-index: 100;
     border-bottom: 1px solid rgba(220, 220, 220, 0.416);
 }
-.navCon1{
+
+.navCon1 {
     display: flex;
     flex-direction: row;
     justify-content: center;
     text-align: center;
     align-items: center;
-    gap:20px;
+    gap: 20px;
     font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
 }
-.navLinks{
+
+.navLinks {
     display: flex;
     flex-direction: row;
-    gap:30px;
+    gap: 30px;
 }
-.navLinks a{
-    list-style:none;
+
+.navLinks a {
+    list-style: none;
     text-decoration: none;
-    color:rgb(102, 123, 163);
+    color: rgb(102, 123, 163);
     font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
     font-weight: 500;
+
+    &:hover {
+        color: white;
+        font-weight: 600;
+        font-size: large;
+        transition: 200ms linear;
+    }
 }
-.navLinks a:hover{
-   
-    color:white;
-    font-weight: 600;
-    font-size: large;
-    transition: 200ms linear;
-}
-.VSnav h5{
+
+.VSnav h5 {
     margin-top: 8px;
 }
-.VSnav{
+
+.VSnav {
     display: flex;
-    gap:7px;
+    gap: 7px;
 }
-.download{
+
+.download {
     background-color: rgb(187, 11, 11);
     border: none;
     padding: 10px 12px;
-    color:white;
+    color: white;
     border-radius: 3px;
     text-align: center;
+    &:hover{
+        background-color: rgb(255, 10, 1);
+        font-size: medium;
+        transition: 200ms linear;
+        cursor: pointer;
+    }
 }
