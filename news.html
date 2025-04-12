@@ -1,8 +1,9 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Disaster News - Daily Updates</title>
   <link rel="stylesheet" href="style.css">
   <style>
@@ -93,24 +94,44 @@
     }
 
     nav {
-  position: fixed;
-  top: 0;
-  width: 100%;
-  background-color: rgba(1, 3, 14, 0.943); /* same background as body */
-  z-index: 1000;
-  padding: 10px 0;
-}
-body {
-  padding-top: 70px; /* to avoid content hiding behind navbar */
-}
+      position: fixed;
+      top: 0;
+      width: 100%;
+      background-color: rgba(1, 3, 14, 0.943);
+      /* same background as body */
+      z-index: 1000;
+      padding: 10px 0;
+    }
+
+    body {
+      padding-top: 70px;
+      /* to avoid content hiding behind navbar */
+    }
 
 
-    .earthquake { background: #e67e22; }
-    .flood { background: #3498db; }
-    .wildfire { background: #e74c3c; }
-    .cyclone { background: #1abc9c; }
-    .tsunami { background: #9b59b6; }
-    .default { background: #7f8c8d; }
+    .earthquake {
+      background: #e67e22;
+    }
+
+    .flood {
+      background: #3498db;
+    }
+
+    .wildfire {
+      background: #e74c3c;
+    }
+
+    .cyclone {
+      background: #1abc9c;
+    }
+
+    .tsunami {
+      background: #9b59b6;
+    }
+
+    .default {
+      background: #7f8c8d;
+    }
 
     #loading {
       text-align: center;
@@ -120,6 +141,7 @@ body {
     }
   </style>
 </head>
+
 <body>
 
   <!-- Navigation (matches index.html exactly) -->
@@ -228,29 +250,30 @@ body {
 
     window.onload = fetchDisasterNews;
   </script>
-    <footer>
-      <div class="footer">
-          <div class="footCon1">
-              <h1>Quick Links</h1><br>
-              <ul>
-                  <li><a href="index.html">Home</a></li>
-                  <li><a href="index.html">About</a></li>
-                  <li><a href="news.html">News</a></li>
-                  <li><a href="measures.html">Precautions</a></li>
-              </ul>
-          </div>
-          <div class="footCon2">
-              <h1>Newsletter Subscription</h1>
-              <input type="email" placeholder="Enter Email">
-          </div>
-         <div class="footCon3">
-          <h1>We are Social</h1><br>
-          <div class="icons">
-             
-          </div>
-         </div>
-      </div><br>
-      <h3>Copyrights & Terms of uses</h3>
+  <footer>
+    <div class="footer">
+      <div class="footCon1">
+        <h1>Quick Links</h1><br>
+        <ul>
+          <li><a href="index.html">Home</a></li>
+          <li><a href="index.html">About</a></li>
+          <li><a href="news.html">News</a></li>
+          <li><a href="measures.html">Precautions</a></li>
+        </ul>
+      </div>
+      <div class="footCon2">
+        <h1>Newsletter Subscription</h1>
+        <input type="email" placeholder="Enter Email">
+      </div>
+      <div class="footCon3">
+        <h1>We are Social</h1><br>
+        <div class="icons">
+
+        </div>
+      </div>
+    </div><br>
+    <h3>Copyrights & Terms of uses</h3>
   </footer>
 </body>
+
 </html>
