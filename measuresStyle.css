@@ -86,3 +86,28 @@ h1 {
     transform: scale(1);
   }
 }
+
+@media (max-width:768px) {
+  .precContainer {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+    justify-items: center;
+  }
+}
+@media (max-width:680px) {
+  .precContainer {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+    justify-items: center;
+  }
+}
+@media (max-width:330px) {
+  .precContainer {
+    display: grid;
+    grid-template-columns: repeat(1, 1fr);
+    gap: 10px;
+    justify-items: center;
+  }
+}
