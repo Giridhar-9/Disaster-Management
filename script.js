@@ -14,7 +14,7 @@ function sendOTP() {
   alert("Your OTP is: " + generatedOTP);
 
   document.getElementById("login-box").style.display = "none";
-  document.getElementById("otp-box").style.display = "block";
+  document.getElementById("otp-box").style.display = "flex";
 }
 
 function verifyOTP() {
