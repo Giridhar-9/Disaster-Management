@@ -48,4 +48,42 @@ const menuIcon = document.querySelector('#menu');
             });
         });
 
-      
+        const firebaseConfig = {
+            apiKey: "AIzaSyDH7miURtTBwk6VaWFpm_nUQ_Y0RclR23w",
+            authDomain: "subscription-f065e.firebaseapp.com",
+            projectId: "subscription-f065e",
+            databaseURL: "https://subscription-f065e-default-rtdb.firebaseio.com",
+          
+            storageBucket: "subscription-f065e.firebasestorage.app",
+            messagingSenderId: "220215209505",
+            appId: "1:220215209505:web:24073d6bf2066433c57d60",
+            measurementId: "G-EM37SJHWQV"
+          };
+              
+              firebase.initializeApp(firebaseConfig);
+              const database = firebase.database();
+          
+              
+          
+              
+              function subscribe() {
+                const email = document.getElementById("emailInput").value.trim();
+                if (!email || !email.includes("@")) {
+                  alert("Please enter a valid email.");
+                  return;
+                }
+          
+                
+                const newRef = database.ref("subscribers").push();
+                newRef.set({
+                  email: email,
+                  timestamp: new Date().toISOString()
+                }).then(() => {
+                  alert("Subscribed successfully!");
+                  document.getElementById("emailInput").value = "";
+                  sendConfirmationEmail(email);
+                }).catch((error) => {
+                  console.error("Firebase error:", error);
+                //   alert("Failed to subscribe. Try again later.");
+                });
+              }
