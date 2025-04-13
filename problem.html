@@ -5,6 +5,7 @@
   <title>Report Problem</title>
 
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <link rel="stylesheet" href="style.css">
 
   <style>
     * {
@@ -174,7 +175,7 @@
         display: flex;
         flex-direction: column;
         gap:20px;
-        
+
       }
     }
   </style>
@@ -185,13 +186,14 @@
       <div class="VSnav">
         <h3 onclick="window.open('index.html','_self')">CrisisGaurd</h3>
       </div>
-      <img src="Images/food.png" width="30" id="menu">
+     
       <div class="navLinks">
         <a href="index.html">Home</a>
         <a onclick="window.open('news.html', '_blank')">News</a>
         <a onclick="window.open('measures.html', '_blank')">Precautions</a>
         <a href="map.html">Map</a>
       </div>
+      <img src="Images/food.png" width="30" id="menu">
     </div>
   </nav>
 
@@ -213,5 +215,6 @@
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
   <script src="problem.js"></script>
+  <script src="demo.js"></script>
 </body>
 </html>
