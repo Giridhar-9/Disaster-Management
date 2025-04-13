@@ -6,6 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <link rel="stylesheet" href="style.css">
 
   <style>
     * {
@@ -82,14 +83,10 @@
       width: 100%;
     }
 
-    .container {
+    .container{
       display: flex;
       flex-direction: row;
-      flex-wrap: wrap;
-      justify-content: center;
-      align-items: flex-start;
       gap: 20px;
-      max-width: 1000px;
       width: 100%;
       padding: 20px;
     }
@@ -102,8 +99,12 @@
 
     .form-container {
       padding: 30px;
-      flex: 1 1 400px;
-      min-width: 280px;
+      border-radius: 12px;
+      display: flex;
+      flex-direction: column;
+      flex: 1;
+      min-width: 300px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
     }
 
     h2 {
@@ -180,6 +181,14 @@
         justify-content: center;
       }
     }
+    @media (max-width:768px){
+      .container{
+        display: flex;
+        flex-direction: column;
+        gap:20px;
+
+      }
+    }
   </style>
 </head>
 <body>
@@ -188,13 +197,14 @@
       <div class="VSnav">
         <h3 onclick="window.open('index.html','_self')">CrisisGaurd</h3>
       </div>
-      <img src="Images/food.png" width="30" id="menu" alt="Menu">
+     
       <div class="navLinks">
         <a href="index.html">Home</a>
         <a onclick="window.open('news.html', '_blank')">News</a>
         <a onclick="window.open('measures.html', '_blank')">Precautions</a>
         <a href="map.html">Map</a>
       </div>
+      <img src="Images/food.png" width="30" id="menu">
     </div>
   </nav>
 
@@ -215,5 +225,6 @@
   <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore-compat.js"></script>
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
   <script src="problem.js"></script>
+  <script src="demo.js"></script>
 </body>
 </html>
