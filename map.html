@@ -7,7 +7,7 @@
   <title>3D Earth - Weather, Disasters, Drought</title>
   <script src="https://cesium.com/downloads/cesiumjs/releases/1.104/Build/Cesium/Cesium.js"></script>
   <link href="https://cesium.com/downloads/cesiumjs/releases/1.104/Build/Cesium/Widgets/widgets.css" rel="stylesheet" />
-  <link rel="stylesheet" href="style.css"> <style>
+  <style>
     html,
     body {
       margin: 0;
@@ -39,7 +39,6 @@
       padding: 0 20px;
       z-index: 1000;
       color: white;
-      box-sizing: border-box;
     }
 
     .navCon1 {
@@ -48,10 +47,10 @@
       gap: 30px;
     }
 
-    .VSnav h5 {
+    .VSnav h3 {
       margin: 0;
-      font-size: 16px;
-      font-weight: 600;
+      font-size: 20px;
+      cursor: pointer;
     }
 
     .navLinks a {
@@ -100,6 +99,20 @@
       margin-right: 6px;
       border-radius: 3px;
     }
+
+    #gpsButton {
+      position: fixed;
+      top: 80px;
+      left: 20px;
+      z-index: 1000;
+      background-color: #1f6feb;
+      color: white;
+      border: none;
+      padding: 10px 16px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: bold;
+    }
   </style>
 </head>
 
@@ -108,20 +121,22 @@
   <nav>
     <div class="navCon1">
       <div class="VSnav">
-        <h3 onclick="window.open('index.html','_self')">CrisisGaurd</h3>
+        <h3 onclick="window.open('index.html','_self')">CrisisGuard</h3>
       </div>
-      <img src="Images/food.png" width="30" id="menu">
       <div class="navLinks">
         <a href="index.html">Home</a>
         <a onclick="window.open('news.html', '_blank')">News</a>
         <a onclick="window.open('measures.html', '_blank')">Precautions</a>
-        <a href="map.html">Map</a>
+        <a href="#">Map</a>
+        <a href="#">About us</a>
       </div>
     </div>
     <div class="navCon2">
       <button class="download" onclick="window.open('login.html', '_blank')">Rescue</button>
     </div>
   </nav>
+
+  <button id="gpsButton">📍 GPS</button>
 
   <div id="cesiumContainer"></div>
 
@@ -150,17 +165,14 @@
       destination: Cesium.Cartesian3.fromDegrees(0, 20, 20000000)
     });
 
-    // Earthquake data
+    // Earthquakes
     fetch('https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_day.geojson')
       .then(res => res.json())
       .then(data => {
         data.features.forEach(eq => {
-          const coords = eq.geometry.coordinates;
+          const [lon, lat] = eq.geometry.coordinates;
           const mag = eq.properties.mag;
           const place = eq.properties.place;
-
-          const lon = parseFloat(coords[0]);
-          const lat = parseFloat(coords[1]);
 
           if (!isNaN(mag) && !isNaN(lat) && !isNaN(lon)) {
             viewer.entities.add({
@@ -182,10 +194,7 @@
       .then(text => {
         const rows = text.trim().split('\n').slice(1);
         rows.forEach(row => {
-          const cols = row.split(',');
-          const lat = parseFloat(cols[0]);
-          const lon = parseFloat(cols[1]);
-
+          const [lat, lon] = row.split(',').map(Number);
           if (!isNaN(lat) && !isNaN(lon)) {
             viewer.entities.add({
               position: Cesium.Cartesian3.fromDegrees(lon, lat),
@@ -199,7 +208,40 @@
         });
       });
 
-    // Weather on click
+    // Predefined Weather Locations
+    const weatherLocations = [
+      { lat: 51.5, lon: -0.1, name: "London" },
+      { lat: 40.7, lon: -74.0, name: "New York" },
+      { lat: 35.6, lon: 139.6, name: "Tokyo" },
+      { lat: 28.6, lon: 77.2, name: "Delhi" }
+    ];
+
+    weatherLocations.forEach(loc => {
+      fetch(`https://api.openweathermap.org/data/2.5/weather?lat=${loc.lat}&lon=${loc.lon}&appid=${OPENWEATHERMAP_KEY}&units=metric`)
+        .then(res => res.json())
+        .then(data => {
+          const weather = data.weather[0].main;
+          const windSpeed = data.wind.speed;
+          const temp = data.main.temp;
+
+          let color = Cesium.Color.BLUE;
+          if (weather.toLowerCase().includes("rain")) color = Cesium.Color.LIGHTBLUE;
+          else if (weather.toLowerCase().includes("thunderstorm")) color = Cesium.Color.PURPLE;
+          else if (windSpeed > 6) color = Cesium.Color.GREEN;
+
+          viewer.entities.add({
+            position: Cesium.Cartesian3.fromDegrees(loc.lon, loc.lat),
+            ellipse: {
+              semiMinorAxis: 15000,
+              semiMajorAxis: 15000,
+              material: color.withAlpha(0.5)
+            },
+            description: `🌤️ <b>${loc.name}</b><br>Weather: ${weather}<br>Temp: ${temp}°C<br>Wind: ${windSpeed} m/s`
+          });
+        });
+    });
+
+    // On map click - show weather
     viewer.screenSpaceEventHandler.setInputAction(function (click) {
       const cartesian = viewer.camera.pickEllipsoid(click.position, viewer.scene.globe.ellipsoid);
       if (cartesian) {
@@ -233,7 +275,7 @@
       }
     }, Cesium.ScreenSpaceEventType.LEFT_CLICK);
 
-    // Drought regions
+    // Drought Regions
     const droughtRegions = [
       { lat: 28.6, lon: 77.2, region: "Delhi, India" },
       { lat: 35.7, lon: -119.4, region: "California, USA" },
@@ -241,16 +283,56 @@
     ];
 
     droughtRegions.forEach(d => {
-      if (!isNaN(d.lat) && !isNaN(d.lon)) {
-        viewer.entities.add({
-          position: Cesium.Cartesian3.fromDegrees(d.lon, d.lat),
-          ellipse: {
-            semiMinorAxis: 40000,
-            semiMajorAxis: 40000,
-            material: Cesium.Color.YELLOW.withAlpha(0.4)
-          },
-          description: `🌾 <b>Drought Region</b><br>${d.region}`
+      viewer.entities.add({
+        position: Cesium.Cartesian3.fromDegrees(d.lon, d.lat),
+        ellipse: {
+          semiMinorAxis: 40000,
+          semiMajorAxis: 40000,
+          material: Cesium.Color.YELLOW.withAlpha(0.4)
+        },
+        description: `🌾 <b>Drought Region</b><br>${d.region}`
+      });
+    });
+
+    // GPS Button - fly closer to user's location
+    document.getElementById("gpsButton").addEventListener("click", () => {
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(function (position) {
+          const lat = position.coords.latitude;
+          const lon = position.coords.longitude;
+
+          viewer.camera.flyTo({
+            destination: Cesium.Cartesian3.fromDegrees(lon, lat, 50000)
+          });
+
+          fetch(`https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${OPENWEATHERMAP_KEY}&units=metric`)
+            .then(res => res.json())
+            .then(data => {
+              const weather = data.weather[0].main;
+              const windSpeed = data.wind.speed;
+              const city = data.name || 'Your Location';
+              const temp = data.main.temp;
+
+              let color = Cesium.Color.BLUE;
+              if (weather.toLowerCase().includes("rain")) color = Cesium.Color.LIGHTBLUE;
+              else if (weather.toLowerCase().includes("thunderstorm")) color = Cesium.Color.PURPLE;
+              else if (windSpeed > 6) color = Cesium.Color.GREEN;
+
+              viewer.entities.add({
+                position: Cesium.Cartesian3.fromDegrees(lon, lat),
+                ellipse: {
+                  semiMinorAxis: 15000,
+                  semiMajorAxis: 15000,
+                  material: color.withAlpha(0.5)
+                },
+                description: `📍 <b>${city}</b><br>Weather: ${weather}<br>Temp: ${temp}°C<br>Wind: ${windSpeed} m/s`
+              });
+            });
+        }, () => {
+          alert("Location access denied.");
         });
+      } else {
+        alert("Geolocation not supported.");
       }
     });
   </script>
