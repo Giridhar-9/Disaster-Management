@@ -2,10 +2,10 @@
 <html lang="en">
 
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Home Page</title>
-  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
@@ -33,108 +33,55 @@
     <div class="slidingCards" id="navCon1">
       <button id="prevBtn">&lt;</button>
       <div class="video-container">
+
         <div class="video-item active">
           <b class="videoTitle">Latest News</b>
           <img src="https://t4.ftcdn.net/jpg/09/49/36/15/360_F_949361534_SswW9uegFAejlnJAfxkLyQVgF732o1fK.jpg" onclick="window.open('news.html', '_blank')" >
         </div>
+
         <div class="video-item">
           <b class="videoTitle">Alerts</b>
-          <img src="Images/CrisiGaurd(2).jpg" onclick="window.open('alert.html', '_blank')" />
+          <img src="Images/CrisiGaurd(2).jpg" onclick="window.open('alert.html', '_blank')">
         </div>
+
         <div class="video-item">
           <b class="videoTitle">Safety Measures</b>
-          <img src="https://wallpapers.com/images/featured/safety-pictures-yxhdianfjuydk3zt.jpg" onclick="window.open('measures.html', '_blank')" />
+          <img src="https://wallpapers.com/images/featured/safety-pictures-yxhdianfjuydk3zt.jpg" onclick="window.open('measures.html', '_blank')">
+
         </div>
       </div>
       <button id="nextBtn">&gt;</button>
-    </div>
-    <br />
-
+    </div><br>
     <div class="about" id="about">
-      <h1 style="text-align: center">About Us</h1>
-      <br /><br />
-      <p><b>CrisisGaurd</b> is an organisation whose main goal is to save people from disasters. Users can access various types of data or even raise an alert when a disaster is occurring. This website contains sections like NEWS, MAP, and Precautions.</p>
-      <br />
-      <p><b>MAP</b> shows all the areas where disasters are occurring in real-time.</p>
-      <br />
-      <p><b>NEWS</b> contains the latest updates going around the world.</p>
-      <br />
-      <p><b>Precautions</b> lists necessary steps to take during a disaster.</p>
-      <br />
-    </div>
-    <br /><br />
+      <h1 style="text-align: center;">About Us</h1><br><br>
+      <p><b>CrisisGaurd</b> is an organisation whose main goal is to save people from disasters. User can access various
+        types
+        of data or even raise an alert when there is a disaster occuring at his/her place. This website contains
+        sections like NEWS, MAP and precautions.</p><br>
+      <p><b>MAP</b> shows all the areas where disasters are occuring at real-time </p><br>
+      <p><b>NEWS</b> contains the latest updates going around the world </p><br>
+      <p><b>Precautions</b> contains all the necessary precautions needed to be taken care when a disaster occurs</p>
+      <br>
+    </div><br><br>
   </main>
-
   <footer>
     <div class="footer">
       <div class="footCon2">
         <h1 class="footHead">Newsletter Subscription</h1>
-        <input type="email" id="emailInput" placeholder="Enter Email" />
-        <button onclick="subscribe()">Subscribe</button>
+        <input type="email" placeholder="Enter Email">
       </div>
       <div class="footCon3">
-        <h1 class="footHead">We are Social</h1>
-        <br />
+        <h1 class="footHead">We are Social</h1><br>
         <div class="icons">
           <img src="Images/facebook.png" width="33" style="background-color: aliceblue; border-radius: 8px;">
           <img src="images/x.png" style="border-radius: 10px;" width="33">
           <img src="Images/instagram.png" style="background-color: aliceblue; border-radius: 10px;" width="33">
         </div>
       </div>
-    </div>
-    <br />
+    </div><br>
     <h3>Copyright © 2025 CrisisGaurd | All Rights Reserved.</h3>
   </footer>
-
-  
-  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
-  <script src="https://cdn.emailjs.com/dist/email.min.js"></script>
-
-  <script>
-
-    const firebaseConfig = {
-  apiKey: "AIzaSyDH7miURtTBwk6VaWFpm_nUQ_Y0RclR23w",
-  authDomain: "subscription-f065e.firebaseapp.com",
-  projectId: "subscription-f065e",
-  databaseURL: "https://subscription-f065e-default-rtdb.firebaseio.com",
-
-  storageBucket: "subscription-f065e.firebasestorage.app",
-  messagingSenderId: "220215209505",
-  appId: "1:220215209505:web:24073d6bf2066433c57d60",
-  measurementId: "G-EM37SJHWQV"
-};
-    
-    firebase.initializeApp(firebaseConfig);
-    const database = firebase.database();
-
-    
-
-    
-    function subscribe() {
-      const email = document.getElementById("emailInput").value.trim();
-      if (!email || !email.includes("@")) {
-        alert("Please enter a valid email.");
-        return;
-      }
-
-      
-      const newRef = database.ref("subscribers").push();
-      newRef.set({
-        email: email,
-        timestamp: new Date().toISOString()
-      }).then(() => {
-        alert("Subscribed successfully!");
-        document.getElementById("emailInput").value = "";
-        sendConfirmationEmail(email);
-      }).catch((error) => {
-        console.error("Firebase error:", error);
-        alert("Failed to subscribe. Try again later.");
-      });
-    }
-
-   
-  </script>
+  <script src="demo.js"></script>
 </body>
 
 </html>

@@ -79,6 +79,28 @@
       justify-content: center;
     }
 
+    .legend {
+      position: absolute;
+      bottom: 30px;
+      right: 1px;
+      background: white;
+      color: black;
+      padding: 10px 14px;
+      border-radius: 6px;
+      font-size: 14px;
+      z-index: 1000;
+      line-height: 1.6;
+      box-shadow: 0 0 8px rgba(0, 0, 0, 0.3);
+    }
+
+    .legend span {
+      display: inline-block;
+      width: 14px;
+      height: 14px;
+      margin-right: 6px;
+      border-radius: 3px;
+    }
+
     #gpsButton {
       position: fixed;
       top: 80px;
@@ -129,9 +151,10 @@
   <nav>
     <div class="navCon1">
       <div class="VSnav">
-        <h3 onclick="window.open('index.html','_self')">CrisisGuard</h3>
+        <h3 onclick="window.open('index.html','_self')">CrisisGaurd</h3>
       </div>
-      <div class="navLinks">
+      
+      <div class="navLinks" id="navLinks">
         <a href="index.html">Home</a>
         <a onclick="window.open('news.html', '_blank')">News</a>
         <a onclick="window.open('measures.html', '_blank')">Precautions</a>
@@ -142,6 +165,7 @@
       <button class="download" onclick="window.open('login.html', '_blank')">Rescue</button>
       <img src="Images/food.png" width="30" id="menu" />
     </div>
+   
   </nav>
 
   <button id="gpsButton">📍 GPS</button>
