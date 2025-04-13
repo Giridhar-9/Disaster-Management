@@ -224,7 +224,9 @@
           tagClass = 'cyclone'; tagLabel = 'Cyclone';
         } else if (lowerText.includes('tsunami')) {
           tagClass = 'tsunami'; tagLabel = 'Tsunami';
-        }
+        } else if(lowerText.includes('drought')) {
+          tagClass = 'drought'; tagLabel = 'drought';
+        } 
 
         card.innerHTML = `
           <h2>${article.title}</h2>
@@ -250,7 +252,7 @@
   <footer>
     <div class="footer">
       <div class="footCon1">
-        <h1>Quick Links</h1><br>
+        <h1 class="footHead">Quick Links</h1><br>
         <ul>
           <li><a href="index.html">Home</a></li>
           <li><a href="index.html">About</a></li>
@@ -259,17 +261,19 @@
         </ul>
       </div>
       <div class="footCon2">
-        <h1>Newsletter Subscription</h1>
+        <h1 class="footHead">Newsletter Subscription</h1>
         <input type="email" placeholder="Enter Email">
       </div>
       <div class="footCon3">
-        <h1>We are Social</h1><br>
+        <h1 class="footHead">We are Social</h1><br>
         <div class="icons">
-
+          <img src="Images/facebook.png" width="33" style="background-color: aliceblue; border-radius: 5px;">
+          <img src="images/twitter.png" width="33">
+          <img src="Images/insta.jpg" width="33">
         </div>
       </div>
     </div><br>
-    <h3>Copyrights & Terms of uses</h3>
+    <h3>Copyright © 2025 CrisisGaurd | All Rights Reserved.</h3>
   </footer>
 </body>
 
