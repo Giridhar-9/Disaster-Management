@@ -51,6 +51,9 @@
         } else if(lowerText.includes('drought')) {
           tagClass = 'drought'; tagLabel = 'drought';
         } 
+        else{
+          return;
+        }
 
         card.innerHTML = `
           <h2>${article.title}</h2>

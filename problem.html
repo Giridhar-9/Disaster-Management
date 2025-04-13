@@ -6,8 +6,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-  <link rel="stylesheet" href="style.css">
-
   <style>
     * {
       margin: 0;
@@ -47,6 +45,12 @@
       display: flex;
       align-items: center;
       gap: 20px;
+      width: 100%;
+      justify-content: space-between;
+    }
+
+    .VSnav h3 {
+      cursor: pointer;
     }
 
     .navLinks {
@@ -67,14 +71,41 @@
       transition: 200ms linear;
     }
 
-    .VSnav {
-      display: flex;
-      gap: 7px;
+    #menu {
+      width: 30px;
+      cursor: pointer;
+      display: none;
     }
 
-    .VSnav h3 {
-      margin-top: 8px;
-      cursor: pointer;
+    /* Sidebar styles */
+    .sidebar {
+      position: fixed;
+      top: 0;
+      left: -250px;
+      height: 100%;
+      width: 250px;
+      background-color: #0d1b2a;
+      padding: 60px 20px;
+      transition: left 0.3s ease-in-out;
+      z-index: 200;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .sidebar a {
+      color: white;
+      text-decoration: none;
+      font-size: 18px;
+      font-weight: 500;
+    }
+
+    .sidebar a:hover {
+      color: #00aaff;
+    }
+
+    .sidebar.show {
+      left: 0;
     }
 
     main {
@@ -83,7 +114,7 @@
       width: 100%;
     }
 
-    .container{
+    .container {
       display: flex;
       flex-direction: row;
       gap: 20px;
@@ -99,12 +130,8 @@
 
     .form-container {
       padding: 30px;
-      border-radius: 12px;
-      display: flex;
-      flex-direction: column;
       flex: 1;
       min-width: 300px;
-      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
     }
 
     h2 {
@@ -160,34 +187,23 @@
     }
 
     @media (max-width: 768px) {
+      .navLinks {
+        display: none;
+      }
+
+      #menu {
+        display: block;
+      }
+
       .container {
         flex-direction: column;
-        align-items: stretch;
+        gap: 20px;
       }
 
       .form-container, #map {
         width: 100%;
       }
-
-      nav {
-        flex-wrap: wrap;
-        justify-content: center;
-        gap: 10px;
-      }
-
-      .navLinks {
-        flex-wrap: wrap;
-        justify-content: center;
-      }
     }
-    /* @media (max-width:768px){
-      .container{
-        display: flex;
-        flex-direction: column;
-        gap:20px;
-
-      }
-    } */
   </style>
 </head>
 <body>
@@ -196,16 +212,22 @@
       <div class="VSnav">
         <h3 onclick="window.open('index.html','_self')">CrisisGaurd</h3>
       </div>
-     
       <div class="navLinks">
         <a href="index.html">Home</a>
         <a onclick="window.open('news.html', '_blank')">News</a>
         <a onclick="window.open('measures.html', '_blank')">Precautions</a>
         <a href="map.html">Map</a>
       </div>
-      <img src="Images/food.png" width="30" id="menu">
+      <img src="Images/food.png" id="menu" alt="menu">
     </div>
   </nav>
+
+  <div class="sidebar" id="sidebar">
+    <a href="index.html">Home</a>
+    <a onclick="window.open('news.html', '_blank')">News</a>
+    <a onclick="window.open('measures.html', '_blank')">Precautions</a>
+    <a href="map.html">Map</a>
+  </div>
 
   <main>
     <div class="container">
@@ -224,6 +246,20 @@
   <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore-compat.js"></script>
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
   <script src="problem.js"></script>
-  <script src="demo.js"></script>
+  <script>
+    const menuIcon = document.getElementById("menu");
+    const sidebar = document.getElementById("sidebar");
+
+    menuIcon.addEventListener("click", () => {
+      sidebar.classList.toggle("show");
+    });
+
+    // Hide sidebar when clicking outside
+    window.addEventListener("click", (e) => {
+      if (!sidebar.contains(e.target) && e.target !== menuIcon) {
+        sidebar.classList.remove("show");
+      }
+    });
+  </script>
 </body>
 </html>
