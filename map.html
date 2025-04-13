@@ -7,7 +7,7 @@
   <title>3D Earth - Weather, Disasters, Drought</title>
   <script src="https://cesium.com/downloads/cesiumjs/releases/1.104/Build/Cesium/Cesium.js"></script>
   <link href="https://cesium.com/downloads/cesiumjs/releases/1.104/Build/Cesium/Widgets/widgets.css" rel="stylesheet" />
-  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="style.css" />
   <style>
     html,
     body {
@@ -79,28 +79,6 @@
       justify-content: center;
     }
 
-    .legend {
-      position: absolute;
-      bottom: 20px;
-      right: 20px;
-      background: white;
-      color: black;
-      padding: 10px 14px;
-      border-radius: 6px;
-      font-size: 14px;
-      z-index: 1000;
-      line-height: 1.6;
-      box-shadow: 0 0 8px rgba(0, 0, 0, 0.3);
-    }
-
-    .legend span {
-      display: inline-block;
-      width: 14px;
-      height: 14px;
-      margin-right: 6px;
-      border-radius: 3px;
-    }
-
     #gpsButton {
       position: fixed;
       top: 80px;
@@ -114,6 +92,35 @@
       cursor: pointer;
       font-weight: bold;
     }
+
+    .legend {
+      position: absolute;
+      bottom: 20px;
+      right: 20px;
+      background: white;
+      color: black;
+      padding: 10px 14px;
+      border-radius: 6px;
+      font-size: 14px;
+      z-index: 1000;
+      line-height: 1.6;
+      box-shadow: 0 0 8px rgba(0, 0, 0, 0.3);
+      cursor: pointer;
+    }
+
+    #legendContent {
+      display: none;
+      margin-top: 8px;
+      transition: all 0.3s ease;
+    }
+
+    .legend span {
+      display: inline-block;
+      width: 14px;
+      height: 14px;
+      margin-right: 6px;
+      border-radius: 3px;
+    }
   </style>
 </head>
 
@@ -124,7 +131,6 @@
       <div class="VSnav">
         <h3 onclick="window.open('index.html','_self')">CrisisGuard</h3>
       </div>
-     
       <div class="navLinks">
         <a href="index.html">Home</a>
         <a onclick="window.open('news.html', '_blank')">News</a>
@@ -134,28 +140,36 @@
     </div>
     <div class="navCon2">
       <button class="download" onclick="window.open('login.html', '_blank')">Rescue</button>
-      <img src="Images/food.png" width="30" id="menu">
+      <img src="Images/food.png" width="30" id="menu" />
     </div>
   </nav>
 
   <button id="gpsButton">📍 GPS</button>
-
   <div id="cesiumContainer"></div>
 
-  <div class="legend">
-    <strong>Legend</strong><br>
-    <span style="background:red;"></span> Earthquake<br>
-    <span style="background:orange;"></span> Wildfire<br>
-    <span style="background:lightblue;"></span> Rain<br>
-    <span style="background:blue;"></span> Clouds<br>
-    <span style="background:green;"></span> Windy<br>
-    <span style="background:purple;"></span> Thunderstorm<br>
-    <span style="background:yellow;"></span> Drought<br>
+  <!-- Collapsible Legend -->
+  <div class="legend" onclick="toggleLegend()">
+    <strong>Legend ▼</strong>
+    <div id="legendContent">
+      <span style="background:red;"></span> Earthquake<br>
+      <span style="background:orange;"></span> Wildfire<br>
+      <span style="background:lightblue;"></span> Rain<br>
+      <span style="background:purple;"></span> Thunderstorm<br>
+      <span style="background:yellow;"></span> Drought<br>
+    </div>
   </div>
 
   <script>
+    function toggleLegend() {
+      const content = document.getElementById('legendContent');
+      const header = document.querySelector('.legend strong');
+      const isOpen = content.style.display === 'block';
+      content.style.display = isOpen ? 'none' : 'block';
+      header.innerHTML = isOpen ? 'Legend ▼' : 'Legend ▲';
+    }
+
     Cesium.Ion.defaultAccessToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiIzNDA5MjQ2Yi02YWMwLTRlNDMtODdmZC0wZmYzMTM3MGU4ZjAiLCJpZCI6MjkzNDEzLCJpYXQiOjE3NDQ0NTQzMjZ9.iwVAVMqR7F1jpeORAEZpG2-7IWcs_X063naaD70S1Uw';
-    const OPENWEATHERMAP_KEY = '94dcbaa4e75b1671410a6606a9684470';
+    const OPENWEATHERMAP_KEY = 'your_api_key_here';
 
     const viewer = new Cesium.Viewer('cesiumContainer', {
       terrainProvider: Cesium.createWorldTerrain(),
@@ -167,6 +181,7 @@
       destination: Cesium.Cartesian3.fromDegrees(0, 20, 20000000)
     });
 
+    // Earthquakes
     fetch('https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_day.geojson')
       .then(res => res.json())
       .then(data => {
@@ -189,6 +204,7 @@
         });
       });
 
+    // Wildfires
     fetch('https://firms.modaps.eosdis.nasa.gov/data/active_fire/c6/csv/MODIS_C6_Global_24h.csv')
       .then(res => res.text())
       .then(text => {
@@ -208,6 +224,7 @@
         });
       });
 
+    // Weather (only Rain and Thunderstorm)
     const weatherLocations = [
       { lat: 51.5, lon: -0.1, name: "London" },
       { lat: 40.7, lon: -74.0, name: "New York" },
@@ -219,60 +236,28 @@
       fetch(`https://api.openweathermap.org/data/2.5/weather?lat=${loc.lat}&lon=${loc.lon}&appid=${OPENWEATHERMAP_KEY}&units=metric`)
         .then(res => res.json())
         .then(data => {
-          const weather = data.weather[0].main;
-          const windSpeed = data.wind.speed;
+          const weather = data.weather[0].main.toLowerCase();
           const temp = data.main.temp;
 
-          let color = Cesium.Color.BLUE;
-          if (weather.toLowerCase().includes("rain")) color = Cesium.Color.LIGHTBLUE;
-          else if (weather.toLowerCase().includes("thunderstorm")) color = Cesium.Color.PURPLE;
-          else if (windSpeed > 6) color = Cesium.Color.GREEN;
+          let color = null;
+          if (weather.includes("rain")) color = Cesium.Color.LIGHTBLUE;
+          else if (weather.includes("thunderstorm")) color = Cesium.Color.PURPLE;
 
-          viewer.entities.add({
-            position: Cesium.Cartesian3.fromDegrees(loc.lon, loc.lat),
-            ellipse: {
-              semiMinorAxis: 15000,
-              semiMajorAxis: 15000,
-              material: color.withAlpha(0.5)
-            },
-            description: `🌤️ <b>${loc.name}</b><br>Weather: ${weather}<br>Temp: ${temp}°C<br>Wind: ${windSpeed} m/s`
-          });
-        });
-    });
-
-    viewer.screenSpaceEventHandler.setInputAction(function (click) {
-      const cartesian = viewer.camera.pickEllipsoid(click.position, viewer.scene.globe.ellipsoid);
-      if (cartesian) {
-        const cartographic = Cesium.Cartographic.fromCartesian(cartesian);
-        const lat = Cesium.Math.toDegrees(cartographic.latitude);
-        const lon = Cesium.Math.toDegrees(cartographic.longitude);
-
-        fetch(`https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${OPENWEATHERMAP_KEY}&units=metric`)
-          .then(res => res.json())
-          .then(data => {
-            const weather = data.weather[0].main;
-            const windSpeed = data.wind.speed;
-            const city = data.name || 'Selected Area';
-            const temp = data.main.temp;
-
-            let color = Cesium.Color.BLUE;
-            if (weather.toLowerCase().includes("rain")) color = Cesium.Color.LIGHTBLUE;
-            else if (weather.toLowerCase().includes("thunderstorm")) color = Cesium.Color.PURPLE;
-            else if (windSpeed > 6) color = Cesium.Color.GREEN;
-
+          if (color) {
             viewer.entities.add({
-              position: Cesium.Cartesian3.fromDegrees(lon, lat),
+              position: Cesium.Cartesian3.fromDegrees(loc.lon, loc.lat),
               ellipse: {
                 semiMinorAxis: 15000,
                 semiMajorAxis: 15000,
                 material: color.withAlpha(0.5)
               },
-              description: `🌤️ <b>${city}</b><br>Weather: ${weather}<br>Temp: ${temp}°C<br>Wind: ${windSpeed} m/s`
+              description: `🌦️ <b>${loc.name}</b><br>Weather: ${weather}<br>Temp: ${temp}°C`
             });
-          });
-      }
-    }, Cesium.ScreenSpaceEventType.LEFT_CLICK);
+          }
+        });
+    });
 
+    // Droughts
     const droughtRegions = [
       { lat: 28.6, lon: 77.2, region: "Delhi, India" },
       { lat: 35.7, lon: -119.4, region: "California, USA" },
@@ -291,6 +276,7 @@
       });
     });
 
+    // GPS Button
     document.getElementById("gpsButton").addEventListener("click", () => {
       if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(function (position) {
@@ -300,30 +286,6 @@
           viewer.camera.flyTo({
             destination: Cesium.Cartesian3.fromDegrees(lon, lat, 50000)
           });
-
-          fetch(`https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${OPENWEATHERMAP_KEY}&units=metric`)
-            .then(res => res.json())
-            .then(data => {
-              const weather = data.weather[0].main;
-              const windSpeed = data.wind.speed;
-              const city = data.name || 'Your Location';
-              const temp = data.main.temp;
-
-              let color = Cesium.Color.BLUE;
-              if (weather.toLowerCase().includes("rain")) color = Cesium.Color.LIGHTBLUE;
-              else if (weather.toLowerCase().includes("thunderstorm")) color = Cesium.Color.PURPLE;
-              else if (windSpeed > 6) color = Cesium.Color.GREEN;
-
-              viewer.entities.add({
-                position: Cesium.Cartesian3.fromDegrees(lon, lat),
-                ellipse: {
-                  semiMinorAxis: 15000,
-                  semiMajorAxis: 15000,
-                  material: color.withAlpha(0.5)
-                },
-                description: `📍 <b>${city}</b><br>Weather: ${weather}<br>Temp: ${temp}°C<br>Wind: ${windSpeed} m/s`
-              });
-            });
         }, () => {
           alert("Location access denied.");
         });
@@ -334,5 +296,4 @@
   </script>
 
 </body>
-
 </html>
