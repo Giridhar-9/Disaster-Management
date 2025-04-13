@@ -1,6 +1,4 @@
-*{
-  text-align: center;
-}
+
 .precContainer {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
