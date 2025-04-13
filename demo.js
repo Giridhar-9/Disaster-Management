@@ -51,3 +51,5 @@ const menuIcon = document.querySelector('#menu');
                 navMenu.classList.remove('active');
             });
         });
+
+      

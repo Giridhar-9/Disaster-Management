@@ -35,10 +35,15 @@
         <input type="text" id="search-input" placeholder="Search (e.g. flood, earthquake, wildfire)" />
       </div>
       <div id="loading">Loading news...</div>
-      <div id="news-container"></div>
+      <div id="news-container" class="news-container"></div>
     </div>
+    <div class="pagination">
+      <button id="prev" disabled>Previous</button>
+      <span id="page-info"></span>
+      <button id="next">Next</button>
+  </div>
   </main>
-  <script src="news.js"></script>
+  
   <footer>
     <div class="footer">
       <!-- <div class="footCon1"> -->
@@ -66,6 +71,7 @@
     <h3>Copyright © 2025 CrisisGaurd | All Rights Reserved.</h3>
   </footer>
   <script src="demo.js"></script>
+  <script src="news.js"></script>
 </body>
 
 </html>
