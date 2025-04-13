@@ -265,13 +265,15 @@ input[type="email"] {
       
       .navLinks{
         display: none;
-        background-color: #444;
+        background-color: #10172c;
         position: absolute;
         top: 60px;
         left: 0;
         width: 100%;
         flex-direction: column; 
         z-index: 10;
+        color: white;
+        padding:10px;
       }
       
       .navLinks.active {
@@ -285,13 +287,16 @@ input[type="email"] {
       
       .navLinks{
         display: none;
-        background-color: #444;
+        background-color: #10172c;
         position: absolute;
         top: 60px;
         left: 0;
         width: 100%;
         flex-direction: column; 
         z-index: 10;
+        color: white;
+        padding:10px;
+        border-radius: 0 0 20px 20px;
       }
       
       .navLinks.active {

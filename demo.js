@@ -38,13 +38,13 @@ updateVideoDisplay();
 
 
 const menuIcon = document.querySelector('#menu');
-        const navMenu = document.getElementById('navMenu');
+        const navMenu = document.getElementById('navLinks');
 
         menuIcon.addEventListener('click', () => {
             navMenu.classList.toggle('active');
         });
 
-        const navLinks = document.querySelectorAll('.nav a');
+        const navLinks = document.querySelectorAll('.navLinks a');
         navLinks.forEach(link => {
             link.addEventListener('click', () => {
                 navMenu.classList.remove('active');
