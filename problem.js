@@ -1,4 +1,4 @@
-// ✅ Your Firebase config (replace with your own)
+//Firebase config
 const firebaseConfig = {
     apiKey: "AIzaSyDbL-tpjg6_GBCn2GRLAXFhM5sGcL44MQs",
     authDomain: "otp-app-e00d3.firebaseapp.com",
@@ -55,7 +55,7 @@ function submitProblem() {
     timestamp: new Date().toISOString()
   };
 
-  console.log("Submitting report:", report); // Log for debug
+  console.log("Submitting report:", report);
 
   db.collection("disaster_reports").add(report)
     .then(() => {

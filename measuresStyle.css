@@ -1,7 +1,10 @@
+*{
+  text-align: center;
+}
 .precContainer {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  gap: 10px;
+  gap: 20px;
   justify-items: center;
 }
 
@@ -10,7 +13,7 @@
   height: auto;
   text-align: center;
   border: 1px solid ghostwhite;
-  border-radius: 10px;
+  border-radius: 20px;
   padding: 20px;
   box-sizing: border-box;
 }

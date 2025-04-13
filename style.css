@@ -92,7 +92,6 @@ main {
     display: flex;
     flex-direction: row;
     gap: 20px;
-
 }
 
 .video-container {
@@ -153,7 +152,7 @@ img {
 .videoTitle {
     font-size: 2rem;
     position: absolute;
-    color: #ffffff;
+    color: black;
     margin-top: 33%;
     margin-left: 45%;
     text-align: center;
