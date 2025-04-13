@@ -98,11 +98,10 @@
       width: 100%;
     }
 
-    .container {
+    .container{
       display: flex;
+      flex-direction: row;
       gap: 20px;
-      flex-wrap: wrap;
-      max-width: 1000px;
       width: 100%;
       padding: 0 20px;
     }
@@ -111,6 +110,8 @@
       background-color: #0d1b2a;
       padding: 30px;
       border-radius: 12px;
+      display: flex;
+      flex-direction: column;
       flex: 1;
       min-width: 300px;
       box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
@@ -167,6 +168,14 @@
       height: 400px;
       min-width: 300px;
       border-radius: 12px;
+    }
+    @media (max-width:768px){
+      .container{
+        display: flex;
+        flex-direction: column;
+        gap:20px;
+        
+      }
     }
   </style>
 </head>
