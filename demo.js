@@ -8,14 +8,11 @@ function updateVideoDisplay() {
     videoItems.forEach((item, index) => {
         if (index === currentIndex) {
             item.classList.add('active');
-            // Pause video when switching
         } else {
             item.classList.remove('active');
-            // Pause non-active videos
         }
     });
 
-    // Disable buttons at edges
     prevBtn.disabled = currentIndex === 0;
     nextBtn.disabled = currentIndex === videoItems.length - 1;
 }
@@ -33,7 +30,6 @@ nextBtn.addEventListener('click', () => {
     }
 });
 
-// Initialize the display
 updateVideoDisplay();
 
 
@@ -51,3 +47,5 @@ const menuIcon = document.querySelector('#menu');
                 navMenu.classList.remove('active');
             });
         });
+
+      

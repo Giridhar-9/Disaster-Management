@@ -130,3 +130,16 @@ body {
     margin-top: 30px;
     color: #ffffff;
   }
+
+.pagination {
+    margin-top: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+button {
+    padding: 10px 15px;
+    margin: 0 5px;
+    cursor: pointer;
+}

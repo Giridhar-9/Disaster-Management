@@ -11,7 +11,7 @@ function sendOTP() {
   userPhone = phone;
   generatedOTP = Math.floor(1000 + Math.random() * 9000).toString();
 
-  alert("Your OTP is: " + generatedOTP); // Simulated
+  alert("Your OTP is: " + generatedOTP);
 
   document.getElementById("login-box").style.display = "none";
   document.getElementById("otp-box").style.display = "block";

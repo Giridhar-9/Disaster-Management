@@ -14,7 +14,7 @@
       <div class="VSnav">
         <h3 onclick="window.open('index.html','_self')">CrisisGaurd</h3>
       </div>
-      <img src="Images/food.png" width="30" id="menu" />
+      
       <div class="navLinks" id="navLinks">
         <a href="index.html">Home</a>
         <a onclick="window.open('news.html', '_blank')">News</a>
@@ -25,17 +25,17 @@
     </div>
     <div class="navCon2">
       <button class="download" onclick="window.open('login.html', '_blank')">Rescue</button>
+      <img src="Images/food.png" width="30" id="menu">
     </div>
-  </nav>
-  <br />
-
+   
+  </nav><br>
   <main>
     <div class="slidingCards" id="navCon1">
       <button id="prevBtn">&lt;</button>
       <div class="video-container">
         <div class="video-item active">
           <b class="videoTitle">Latest News</b>
-          <img src="https://t4.ftcdn.net/jpg/09/49/36/15/360_F_949361534_SswW9uegFAejlnJAfxkLyQVgF732o1fK.jpg" onclick="window.open('news.html', '_blank')" />
+          <img src="https://t4.ftcdn.net/jpg/09/49/36/15/360_F_949361534_SswW9uegFAejlnJAfxkLyQVgF732o1fK.jpg" onclick="window.open('news.html', '_blank')" >
         </div>
         <div class="video-item">
           <b class="videoTitle">Alerts</b>
@@ -76,9 +76,9 @@
         <h1 class="footHead">We are Social</h1>
         <br />
         <div class="icons">
-          <img src="Images/facebook.png" width="33" style="background-color: aliceblue; border-radius: 5px" />
-          <img src="images/x.png" width="33" />
-          <img src="Images/instagram.png" width="33" />
+          <img src="Images/facebook.png" width="33" style="background-color: aliceblue; border-radius: 8px;">
+          <img src="images/x.png" style="border-radius: 10px;" width="33">
+          <img src="Images/instagram.png" style="background-color: aliceblue; border-radius: 10px;" width="33">
         </div>
       </div>
     </div>
@@ -86,7 +86,7 @@
     <h3>Copyright © 2025 CrisisGaurd | All Rights Reserved.</h3>
   </footer>
 
-  <!-- Firebase & EmailJS Scripts -->
+  
   <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
   <script src="https://cdn.emailjs.com/dist/email.min.js"></script>
@@ -104,13 +104,13 @@
   appId: "1:220215209505:web:24073d6bf2066433c57d60",
   measurementId: "G-EM37SJHWQV"
 };
-    // ✅ Initialize Firebase
+    
     firebase.initializeApp(firebaseConfig);
     const database = firebase.database();
 
     
 
-    // ✅ Subscription Handler
+    
     function subscribe() {
       const email = document.getElementById("emailInput").value.trim();
       if (!email || !email.includes("@")) {
@@ -118,7 +118,7 @@
         return;
       }
 
-      // Save to Firebase
+      
       const newRef = database.ref("subscribers").push();
       newRef.set({
         email: email,

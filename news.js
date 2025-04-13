@@ -72,3 +72,65 @@
     });
 
     window.onload = fetchDisasterNews;
+
+
+    // script.js
+const cardsPerPage = 9; // Number of cards to display per page
+let currentPage = 1; // Current page number
+const totalCards = 40; // Total number of cards (you can update this daily)
+const totalPages = Math.ceil(totalCards / cardsPerPage); // Total number of pages
+
+// Function to generate dummy card data
+function generateCards() {
+    const cards = [];
+    for (let i = 1; i <= totalCards; i++) {
+        cards.push(`Card ${i}`);
+    }
+    return cards;
+}
+
+// Function to display cards for the current page
+function displayCards(cards) {
+    const cardContainer = document.getElementById('news-container');
+    cardContainer.innerHTML = ''; // Clear previous cards
+
+    const start = (currentPage - 1) * cardsPerPage;
+    const end = start + cardsPerPage;
+    const cardsToDisplay = cards.slice(start, end);
+
+    cardsToDisplay.forEach(card => {
+        const cardElement = document.createElement('div');
+        cardElement.className = 'news-card';
+        cardElement.textContent = card;
+        cardContainer.appendChild(cardElement);
+    });
+
+    document.getElementById('page-info').textContent = `Page ${currentPage} of ${totalPages}`;
+}
+
+// Function to handle pagination
+function updatePagination() {
+    document.getElementById('prev').disabled = currentPage === 1;
+    document.getElementById('next').disabled = currentPage === totalPages;
+}
+
+// Event listeners for pagination buttons
+document.getElementById('prev').addEventListener('click', () => {
+    if (currentPage > 1) {
+        currentPage--;
+        updatePagination();
+        displayCards(generateCards());
+    }
+});
+
+document.getElementById('next').addEventListener('click', () => {
+    if (currentPage < totalPages) {
+        currentPage++;
+        updatePagination();
+        displayCards(generateCards());
+    }
+});
+
+// Initial display
+displayCards(generateCards());
+updatePagination();
