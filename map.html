@@ -164,7 +164,6 @@
       destination: Cesium.Cartesian3.fromDegrees(0, 20, 20000000)
     });
 
-    // Earthquakes
     fetch('https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_day.geojson')
       .then(res => res.json())
       .then(data => {
@@ -187,7 +186,6 @@
         });
       });
 
-    // Wildfires
     fetch('https://firms.modaps.eosdis.nasa.gov/data/active_fire/c6/csv/MODIS_C6_Global_24h.csv')
       .then(res => res.text())
       .then(text => {
@@ -207,7 +205,6 @@
         });
       });
 
-    // Predefined Weather Locations
     const weatherLocations = [
       { lat: 51.5, lon: -0.1, name: "London" },
       { lat: 40.7, lon: -74.0, name: "New York" },
@@ -240,7 +237,6 @@
         });
     });
 
-    // On map click - show weather
     viewer.screenSpaceEventHandler.setInputAction(function (click) {
       const cartesian = viewer.camera.pickEllipsoid(click.position, viewer.scene.globe.ellipsoid);
       if (cartesian) {
@@ -274,7 +270,6 @@
       }
     }, Cesium.ScreenSpaceEventType.LEFT_CLICK);
 
-    // Drought Regions
     const droughtRegions = [
       { lat: 28.6, lon: 77.2, region: "Delhi, India" },
       { lat: 35.7, lon: -119.4, region: "California, USA" },
@@ -293,7 +288,6 @@
       });
     });
 
-    // GPS Button - fly closer to user's location
     document.getElementById("gpsButton").addEventListener("click", () => {
       if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(function (position) {

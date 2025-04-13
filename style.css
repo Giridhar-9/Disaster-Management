@@ -195,20 +195,6 @@ footer{
     padding: 20px 20px 50px 20px;
 }
 
-/* .footCon1 ul {
-    list-style-type: none;
-    line-height: 30px;
-}
-
-.footCon1 a {
-    text-decoration: none;
-    color: white;
-    font-size: larger;
-} */
-
-/* .footCon1 a:hover {
-    text-decoration: underline;
-} */
 
 .footCon1 a:active {
     color: purple;
@@ -307,12 +293,7 @@ input[type="email"] {
         flex-direction: column;
         gap:20px; 
       }
-      /* .footCon3{
-      grid-column: 1 / span 2;
-      text-align: center;
-      justify-content: center;
-      align-items: center;
-      } */
+      
       .footHead{
         font-size: 150%;
     }

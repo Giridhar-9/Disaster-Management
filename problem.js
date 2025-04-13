@@ -1,4 +1,3 @@
-// Firebase config
 const firebaseConfig = {
   apiKey: "AIzaSyDbL-tpjg6_GBCn2GRLAXFhM5sGcL44MQs",
   authDomain: "otp-app-e00d3.firebaseapp.com",
@@ -9,7 +8,6 @@ const firebaseConfig = {
   measurementId: "G-Q3J8S8153M"
 };
 
-// Initialize Firebase
 firebase.initializeApp(firebaseConfig);
 const db = firebase.firestore();
 
@@ -20,7 +18,6 @@ const locationBox = document.getElementById("location");
 
 let map;
 
-// Get user location
 if (navigator.geolocation) {
   navigator.geolocation.getCurrentPosition(
     (position) => {
@@ -28,7 +25,6 @@ if (navigator.geolocation) {
       longitude = position.coords.longitude;
       locationBox.textContent = `Phone: ${phone} | Location: Lat: ${latitude}, Long: ${longitude}`;
 
-      // Show map
       map = L.map('map').setView([latitude, longitude], 13);
       L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         attribution: '&copy; OpenStreetMap contributors'
@@ -48,7 +44,6 @@ if (navigator.geolocation) {
   locationBox.textContent = "Geolocation is not supported by this browser.";
 }
 
-// Submit problem
 function submitProblem() {
  
   const problem = document.getElementById("problem").value.trim();
@@ -71,7 +66,7 @@ function submitProblem() {
   .then(() => {
     alert("Problem submitted successfully!");
     document.getElementById("problem").value = "";
-    window.location.href = "emergency.html"; // <-- move it here
+    window.location.href = "emergency.html";
   })
   .catch((error) => {
     console.error("Error submitting problem:", error);
