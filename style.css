@@ -65,6 +65,7 @@ nav {
 .VSnav {
     display: flex;
     gap: 7px;
+    font-size: 1.5em;
 }
 
 .download {
@@ -91,7 +92,6 @@ main {
     display: flex;
     flex-direction: row;
     gap: 20px;
-
 }
 
 .video-container {
@@ -152,7 +152,7 @@ img {
 .videoTitle {
     font-size: 2rem;
     position: absolute;
-    color: #ffffff;
+    color: black;
     margin-top: 33%;
     margin-left: 45%;
     text-align: center;
@@ -253,3 +253,70 @@ input[type="email"] {
 .about p {
     font-size: 20px;
 }
+#menu{
+    display: none;
+    width:35px;
+  }
+
+  @media(max-width:768px){
+    #menu{
+        display: block;
+      }
+      
+      .navLinks{
+        display: none;
+        background-color: #444;
+        position: absolute;
+        top: 60px;
+        left: 0;
+        width: 100%;
+        flex-direction: column; 
+        z-index: 10;
+      }
+      
+      .navLinks.active {
+        display: flex; 
+      }
+  }
+  @media (max-width:480px){
+    #menu{
+        display: block;
+      }
+      
+      .navLinks{
+        display: none;
+        background-color: #444;
+        position: absolute;
+        top: 60px;
+        left: 0;
+        width: 100%;
+        flex-direction: column; 
+        z-index: 10;
+      }
+      
+      .navLinks.active {
+        display: flex; 
+      }
+    .footer{
+        display: grid;
+        grid-template-columns: 50% 50%;
+        gap:10px; 
+      }
+      .footCon3{
+      grid-column: 1 / span 2;
+      text-align: center;
+      justify-content: center;
+      align-items: center;
+      }
+      .footHead{
+        font-size: large;
+    }
+    main{
+        margin-top: 12%;
+    }
+    .VSnav {
+        display: flex;
+        gap: 7px;
+        font-size: 1em;
+    }
+  }

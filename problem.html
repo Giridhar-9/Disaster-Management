@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>OTP Login</title>
+  <title>Report Problem</title>
   <style>
     * {
       margin: 0;
@@ -10,54 +10,66 @@
       box-sizing: border-box;
     }
 
-    body {
+    html, body {
+      height: 100%;
       background-color: rgba(1, 3, 14, 0.943);
       color: white;
-      font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-      height: 100vh;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
       display: flex;
       flex-direction: column;
+    }
+
+    body {
+      justify-content: center;
+      align-items: center;
+      padding-top: 80px; /* height of the nav + some spacing */
     }
 
     nav {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      padding: 10px 20px;
-      background-color: #091726;
-      border-bottom: 1px solid rgba(220, 220, 220, 0.416);
+      padding: 10px 30px;
       position: fixed;
-      width: 100%;
       top: 0;
+      left: 0;
+      width: 100%;
+      background-color: #091726;
       z-index: 100;
+      border-bottom: 1px solid rgba(220, 220, 220, 0.416);
     }
 
     .navCon1 {
       display: flex;
       align-items: center;
-      gap: 30px;
+      gap: 20px;
     }
 
     .navLinks {
       display: flex;
-      gap: 20px;
+      gap: 30px;
     }
 
     .navLinks a {
       text-decoration: none;
       color: rgb(102, 123, 163);
       font-weight: 500;
-      transition: 200ms ease;
     }
 
     .navLinks a:hover {
       color: white;
       font-weight: 600;
       font-size: large;
+      transition: 200ms linear;
+    }
+
+    .VSnav {
+      display: flex;
+      gap: 7px;
     }
 
     .VSnav h5 {
-      margin: 0;
+      margin-top: 8px;
     }
 
     .download {
@@ -65,29 +77,32 @@
       border: none;
       padding: 10px 12px;
       color: white;
-      border-radius: 6px;
+      border-radius: 3px;
       cursor: pointer;
     }
 
     .download:hover {
       background-color: rgb(255, 10, 1);
+      font-size: medium;
+      transition: 200ms linear;
     }
 
-    .center-container {
-      flex: 1;
+    main {
       display: flex;
-      align-items: center;
+      flex-direction: column;
       justify-content: center;
-      padding-top: 100px;
+      align-items: center;
+      min-height: 70vh;
+      width: 100%;
     }
 
-    .form-box {
-      background-color: #091726;
+    .form-container {
+      background-color: #0d1b2a;
       padding: 30px;
       border-radius: 12px;
-      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+      max-width: 500px;
       width: 90%;
-      max-width: 400px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
     }
 
     h2 {
@@ -95,7 +110,7 @@
       margin-bottom: 20px;
     }
 
-    input {
+    input, textarea {
       width: 100%;
       padding: 12px;
       margin-bottom: 15px;
@@ -106,6 +121,19 @@
       color: white;
     }
 
+    textarea {
+      height: 100px;
+    }
+
+    #location {
+      background: #1b2a3a;
+      padding: 10px;
+      margin-bottom: 15px;
+      border-radius: 8px;
+      font-size: 14px;
+      color: #ddd;
+    }
+
     button {
       width: 100%;
       padding: 12px;
@@ -114,16 +142,13 @@
       border: none;
       border-radius: 8px;
       font-size: 16px;
+      font-weight: bold;
       cursor: pointer;
       transition: background 0.3s;
     }
 
     button:hover {
       background-color: #0056b3;
-    }
-
-    #otp-box {
-      display: none;
     }
   </style>
 </head>
@@ -143,22 +168,20 @@
     </div>
   </nav>
 
-  <div class="center-container">
-    <div class="form-box">
-      <div id="login-box">
-        <h2>Enter Phone Number</h2>
-        <input type="text" id="phone" placeholder="Enter 10-digit phone number" />
-        <button onclick="sendOTP()">Send OTP</button>
-      </div>
-
-      <div id="otp-box">
-        <h2>Enter OTP</h2>
-        <input type="text" id="otp" placeholder="Enter OTP" />
-        <button onclick="verifyOTP()">Verify OTP</button>
-      </div>
+  <main>
+    <div class="form-container">
+      <h2>Report Disaster Problem</h2>
+      <div id="location">Getting location...</div>
+      <textarea id="problem" placeholder="Describe your problem here..."></textarea>
+      <button onclick="submitProblem()">Submit</button>
     </div>
-  </div>
+  </main>
 
-  <script src="script.js"></script>
+  <!-- Firebase scripts -->
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore-compat.js"></script>
+
+  <!-- JS -->
+  <script src="problem.js"></script>
 </body>
 </html>
