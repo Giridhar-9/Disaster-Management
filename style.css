@@ -195,7 +195,7 @@ footer{
     padding: 20px 20px 50px 20px;
 }
 
-.footCon1 ul {
+/* .footCon1 ul {
     list-style-type: none;
     line-height: 30px;
 }
@@ -204,11 +204,11 @@ footer{
     text-decoration: none;
     color: white;
     font-size: larger;
-}
+} */
 
-.footCon1 a:hover {
+/* .footCon1 a:hover {
     text-decoration: underline;
-}
+} */
 
 .footCon1 a:active {
     color: purple;
@@ -303,18 +303,18 @@ input[type="email"] {
         display: flex; 
       }
     .footer{
-        display: grid;
-        grid-template-columns: 50% 50%;
-        gap:10px; 
+        display: flex;
+        flex-direction: column;
+        gap:20px; 
       }
-      .footCon3{
+      /* .footCon3{
       grid-column: 1 / span 2;
       text-align: center;
       justify-content: center;
       align-items: center;
-      }
+      } */
       .footHead{
-        font-size: large;
+        font-size: 150%;
     }
     main{
         margin-top: 12%;
