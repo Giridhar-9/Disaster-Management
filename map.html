@@ -331,8 +331,22 @@
         alert("Geolocation not supported.");
       }
     });
-  </script>
+    
+const menuIcon = document.querySelector('#menu');
+        const navMenu = document.getElementById('navLinks');
 
+        menuIcon.addEventListener('click', (e) => {
+            console.log(e)
+            navMenu.classList.toggle('active');
+        });
+
+        const navLinks = document.querySelectorAll('.navLinks a');
+        navLinks.forEach(link => {
+            link.addEventListener('click', () => {
+                navMenu.classList.remove('active');
+            });
+        });
+  </script>
 </body>
 
 </html>
