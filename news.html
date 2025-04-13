@@ -6,140 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Disaster News - Daily Updates</title>
   <link rel="stylesheet" href="style.css">
-  <style>
-    body {
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background: rgba(1, 3, 14, 0.943);
-      margin: 0;
-      padding: 0;
-    }
-
-    .container {
-      max-width: 1000px;
-      margin: 40px auto;
-      padding: 20px;
-    }
-
-    h1 {
-      text-align: center;
-      color: #ffffff;
-      margin-bottom: 20px;
-    }
-
-    #search-box {
-      display: flex;
-      justify-content: center;
-      margin-bottom: 30px;
-    }
-
-    #search-input {
-      padding: 10px;
-      width: 300px;
-      border-radius: 8px;
-      border: 1px solid #ccc;
-      font-size: 1rem;
-    }
-
-    #news-container {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-      gap: 20px;
-    }
-
-    .news-card {
-      background: #ffffff;
-      border-radius: 12px;
-      padding: 20px;
-      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-      border-left: 6px solid #e74c3c;
-      transition: transform 0.3s ease;
-    }
-
-    .news-card:hover {
-      transform: translateY(-5px);
-    }
-
-    .news-card h2 {
-      font-size: 1.1rem;
-      color: #333;
-      margin-bottom: 10px;
-    }
-
-    .news-card p {
-      font-size: 0.95rem;
-      color: #555;
-      margin-bottom: 15px;
-    }
-
-    .news-card a {
-      text-decoration: none;
-      color: #3498db;
-      font-weight: bold;
-    }
-
-    .date-time {
-      font-size: 0.8rem;
-      color: #888;
-      margin-bottom: 10px;
-    }
-
-    .tag {
-      display: inline-block;
-      padding: 3px 8px;
-      border-radius: 8px;
-      font-size: 0.75rem;
-      font-weight: bold;
-      margin-top: 10px;
-      color: white;
-    }
-
-    nav {
-      position: fixed;
-      top: 0;
-      width: 100%;
-      background-color: rgba(1, 3, 14, 0.943);
-  
-      z-index: 1000;
-      padding: 10px 0;
-    }
-
-    body {
-      padding-top: 70px;
-      
-    }
-
-
-    .earthquake {
-      background: #e67e22;
-    }
-
-    .flood {
-      background: #3498db;
-    }
-
-    .wildfire {
-      background: #e74c3c;
-    }
-
-    .cyclone {
-      background: #1abc9c;
-    }
-
-    .tsunami {
-      background: #9b59b6;
-    }
-
-    .default {
-      background: #7f8c8d;
-    }
-
-    #loading {
-      text-align: center;
-      font-size: 1.1rem;
-      margin-top: 30px;
-      color: #ffffff;
-    }
-  </style>
+  <link rel="stylesheet" href="news.css">
 </head>
 
 <body>
@@ -171,83 +38,7 @@
       <div id="news-container"></div>
     </div>
   </main>
-
- 
-  <script>
-    const API_KEY = '294e2179a5ad45b784574885fab2a5d3';
-    const query = '("earthquake" OR "flood" OR "wildfire" OR "tsunami" OR "cyclone")';
-    const NEWS_URL = `https://newsapi.org/v2/everything?q=${encodeURIComponent(query)}&sortBy=publishedAt&language=en&pageSize=20&apiKey=${API_KEY}`;
-
-    let allArticles = [];
-
-    async function fetchDisasterNews() {
-      try {
-        const res = await fetch(NEWS_URL);
-        const data = await res.json();
-        allArticles = data.articles || [];
-        document.getElementById('loading').style.display = 'none';
-        renderNews(allArticles);
-      } catch (error) {
-        console.error('Error fetching news:', error);
-        document.getElementById('loading').innerText = 'Failed to load news.';
-      }
-    }
-
-    function renderNews(articles) {
-      const container = document.getElementById('news-container');
-      container.innerHTML = '';
-
-      if (!articles || articles.length === 0) {
-        container.innerHTML = '<p style="color:white;">No news found.</p>';
-        return;
-      }
-
-      articles.forEach(article => {
-        const card = document.createElement('div');
-        card.className = 'news-card';
-
-        const date = new Date(article.publishedAt);
-        const formattedDate = date.toLocaleString();
-
-        const lowerText = (article.title + ' ' + article.description).toLowerCase();
-        let tagClass = 'default';
-        let tagLabel = 'General';
-
-        if (lowerText.includes('earthquake')) {
-          tagClass = 'earthquake'; tagLabel = 'Earthquake';
-        } else if (lowerText.includes('flood')) {
-          tagClass = 'flood'; tagLabel = 'Flood';
-        } else if (lowerText.includes('wildfire') || lowerText.includes('wildfire')) {
-          tagClass = 'wildfire'; tagLabel = 'Wildfire';
-        } else if (lowerText.includes('cyclone')) {
-          tagClass = 'cyclone'; tagLabel = 'Cyclone';
-        } else if (lowerText.includes('tsunami')) {
-          tagClass = 'tsunami'; tagLabel = 'Tsunami';
-        } else if(lowerText.includes('drought')) {
-          tagClass = 'drought'; tagLabel = 'drought';
-        } 
-
-        card.innerHTML = `
-          <h2>${article.title}</h2>
-          <div class="date-time">${formattedDate}</div>
-          <p>${article.description || 'No description available.'}</p>
-          <a href="${article.url}" target="_blank">Read more</a>
-          <div class="tag ${tagClass}">${tagLabel}</div>
-        `;
-        container.appendChild(card);
-      });
-    }
-
-    document.getElementById('search-input').addEventListener('input', (e) => {
-      const keyword = e.target.value.toLowerCase();
-      const filtered = allArticles.filter(article =>
-        (article.title + article.description).toLowerCase().includes(keyword)
-      );
-      renderNews(filtered);
-    });
-
-    window.onload = fetchDisasterNews;
-  </script>
+  <script src="news.js"></script>
   <footer>
     <div class="footer">
       <div class="footCon1">
@@ -267,7 +58,7 @@
         <h1 class="footHead">We are Social</h1><br>
         <div class="icons">
           <img src="Images/facebook.png" width="33" style="background-color: aliceblue; border-radius: 5px;">
-          <img src="images/x.png" width="33">
+          <img src="images/twitter.png" width="33">
           <img src="Images/insta.jpg" width="33">
         </div>
       </div>
