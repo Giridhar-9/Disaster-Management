@@ -3,6 +3,10 @@
 <head>
   <meta charset="UTF-8">
   <title>Report Problem</title>
+
+  <!-- Leaflet CSS -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+
   <style>
     * {
       margin: 0;
@@ -22,7 +26,7 @@
     body {
       justify-content: center;
       align-items: center;
-      padding-top: 80px; /* height of the nav + some spacing */
+      padding-top: 80px;
     }
 
     nav {
@@ -89,19 +93,27 @@
 
     main {
       display: flex;
-      flex-direction: column;
       justify-content: center;
-      align-items: center;
+      align-items: flex-start;
       min-height: 70vh;
       width: 100%;
+    }
+
+    .container {
+      display: flex;
+      gap: 20px;
+      flex-wrap: wrap;
+      max-width: 1000px;
+      width: 100%;
+      padding: 0 20px;
     }
 
     .form-container {
       background-color: #0d1b2a;
       padding: 30px;
       border-radius: 12px;
-      max-width: 500px;
-      width: 90%;
+      flex: 1;
+      min-width: 300px;
       box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
     }
 
@@ -150,6 +162,13 @@
     button:hover {
       background-color: #0056b3;
     }
+
+    #map {
+      flex: 1;
+      height: 400px;
+      min-width: 300px;
+      border-radius: 12px;
+    }
   </style>
 </head>
 <body>
@@ -169,19 +188,24 @@
   </nav>
 
   <main>
-    <div class="form-container">
-      <h2>Report Disaster Problem</h2>
-      <div id="location">Getting location...</div>
-      <textarea id="problem" placeholder="Describe your problem here..."></textarea>
-      <button onclick="submitProblem()">Submit</button>
+    <div class="container">
+      <div class="form-container">
+        <h2>Report Disaster Problem</h2>
+        <div id="location">Getting location...</div>
+        <textarea id="problem" placeholder="Describe your problem here..."></textarea>
+        <button onclick="submitProblem()">Submit</button>
+      </div>
+      <div id="map">Loading map...</div>
     </div>
   </main>
 
-  <!-- Firebase scripts -->
+  <!-- Firebase -->
   <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore-compat.js"></script>
 
-  <!-- JS -->
+  <!-- Leaflet JS -->
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
   <script src="problem.js"></script>
 </body>
 </html>
