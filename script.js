@@ -1,28 +1,30 @@
-let generatedOTP = "";
-let userPhone = "";
+const firebaseConfig = {
+  apiKey: "AIzaSyBVLSeqrux0LDlHQcWvLW1KF7H2LxYbxN0",
+  authDomain: "crisisguard-2026.firebaseapp.com",
+  projectId: "crisisguard-2026",
+  storageBucket: "crisisguard-2026.firebasestorage.app",
+  messagingSenderId: "889170731440",
+  appId: "1:889170731440:web:2beb90b07b42164eea3675"
+};
 
-function sendOTP() {
-  const phone = document.getElementById("phone").value.trim();
-  if (!phone.match(/^\d{10}$/)) {
-    alert("Please enter a valid 10-digit phone number.");
-    return;
-  }
+firebase.initializeApp(firebaseConfig);
 
-  userPhone = phone;
-  generatedOTP = Math.floor(1000 + Math.random() * 9000).toString();
+const auth = firebase.auth();
+const provider = new firebase.auth.GoogleAuthProvider();
 
-  alert("Your OTP is: " + generatedOTP);
+const googleLoginButton = document.getElementById("google-login");
 
-  document.getElementById("login-box").style.display = "none";
-  document.getElementById("otp-box").style.display = "flex";
-}
+googleLoginButton.addEventListener("click", function () {
 
-function verifyOTP() {
-  const enteredOTP = document.getElementById("otp").value.trim();
-  if (enteredOTP === generatedOTP) {
-    localStorage.setItem("phone", userPhone);
-    window.location.href = "problem.html";
-  } else {
-    alert("Invalid OTP. Try again.");
-  }
-}
+  auth.signInWithPopup(provider)
+    .then(() => {
+      window.location.href = "problem.html";
+    })
+    .catch((error) => {
+
+      console.error("Google Sign-In Error:", error);
+
+      alert("Google Sign-In failed. Please try again.");
+    });
+
+});

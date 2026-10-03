@@ -242,7 +242,7 @@
       <div id="cycloneModal" class="modal">
         <div class="modal-content">
           <span class="close" onclick="closeModal('cycloneModal')">&times;</span>
-          <h2>Tornado Precautions</h2>
+          <h2>Cyclone Precautions</h2>
           <ul>
             <li>Stay informed by listening to weather updates and warnings.</li>
             <li>Secure loose objects around your home like furniture and tools.</li>
@@ -256,11 +256,6 @@
 
         </div>
       </div>
-
-
-
-
-
 
       <div class="precItem" onclick="openModal('thunderstormModal')">
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 60 60">
@@ -425,7 +420,7 @@
         <h2>Landslide</h2>
         <div id="landslideModal" class="modal">
           <div class="modal-content">
-            <span class="close" onclick="closeModal('thunderstormModal')">&times;</span>
+            <span class="close" onclick="event.stopPropagation(); closeModal('landslideModal')">&times;</span>
             <h2>Landslide Precautions</h2>
             <ul>
               <li>Stay alert during heavy rainfall or after earthquakes, especially if you live in a landslide-prone
@@ -449,19 +444,6 @@
   </main>
   <footer>
     <div class="footer">
-      <div class="footCon2">
-        <h1 class="footHead">Newsletter Subscription</h1>
-        <input type="email" placeholder="Enter Email">
-      </div>
-      <div class="footCon3">
-        <h1 class="footHead">We are Social</h1><br>
-        <div class="icons">
-          <img src="Images/facebook.png" width="33" style="background-color: aliceblue; border-radius: 5px;">
-          <img src="images/x.png" style="border-radius: 10px;" width="33">
-          <img src="Images/instagram.png" style="background-color: aliceblue; border-radius: 10px;" width="33">
-        </div>
-      </div>
-    </div><br>
     <h3>Copyright © 2025 CrisisGuard | All Rights Reserved.</h3>
   </footer>
   <script src="measures.js"></script>

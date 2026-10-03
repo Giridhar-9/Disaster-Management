@@ -1,17 +1,28 @@
 const firebaseConfig = {
-  apiKey: "AIzaSyDbL-tpjg6_GBCn2GRLAXFhM5sGcL44MQs",
-  authDomain: "otp-app-e00d3.firebaseapp.com",
-  projectId: "otp-app-e00d3",
-  storageBucket: "otp-app-e00d3.firebasestorage.app",
-  messagingSenderId: "55547113700",
-  appId: "1:55547113700:web:583ebb009915248ad9bcf1",
-  measurementId: "G-Q3J8S8153M"
+  apiKey: "AIzaSyBVLSeqrux0LDlHQcWvLW1KF7H2LxYbxN0",
+  authDomain: "crisisguard-2026.firebaseapp.com",
+  projectId: "crisisguard-2026",
+  storageBucket: "crisisguard-2026.firebasestorage.app",
+  messagingSenderId: "889170731440",
+  appId: "1:889170731440:web:2beb90b07b42164eea3675"
 };
 
 firebase.initializeApp(firebaseConfig);
-const db = firebase.firestore();
 
-const phone = localStorage.getItem("phone");
+const db = firebase.firestore();
+const auth = firebase.auth();
+
+let currentUser = null;
+
+auth.onAuthStateChanged((user) => {
+  if (!user) {
+    window.location.href = "login.html";
+    return;
+  }
+
+  currentUser = user;
+});
+
 let latitude = "Unavailable";
 let longitude = "Unavailable";
 const locationBox = document.getElementById("location");
@@ -23,7 +34,7 @@ if (navigator.geolocation) {
     (position) => {
       latitude = position.coords.latitude;
       longitude = position.coords.longitude;
-      locationBox.textContent = `Phone: ${phone} | Location: Lat: ${latitude}, Long: ${longitude}`;
+      locationBox.textContent = `Location: Lat: ${latitude}, Long: ${longitude}`;
 
       map = L.map('map').setView([latitude, longitude], 13);
       L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -36,7 +47,7 @@ if (navigator.geolocation) {
     },
     (error) => {
       console.error("Location error:", error);
-      locationBox.textContent = `Phone: ${phone} | Location: Not available`;
+      locationBox.textContent = `Location: Not available`;
       document.getElementById("map").textContent = "Map unavailable";
     }
   );
@@ -45,7 +56,7 @@ if (navigator.geolocation) {
 }
 
 function submitProblem() {
- 
+
   const problem = document.getElementById("problem").value.trim();
 
   if (!problem) {
@@ -53,8 +64,16 @@ function submitProblem() {
     return;
   }
 
+  if (!currentUser) {
+    alert("You must be logged in to submit a report.");
+    window.location.href = "login.html";
+    return;
+  }
+
   const report = {
-    phone: phone || "Unknown",
+    userId: currentUser.uid,
+    name: currentUser.displayName,
+    email: currentUser.email,
     latitude: latitude,
     longitude: longitude,
     location: `Lat: ${latitude}, Long: ${longitude}`,
@@ -63,15 +82,13 @@ function submitProblem() {
   };
 
   db.collection("disaster_reports").add(report)
-  .then(() => {
-    alert("Problem submitted successfully!");
-    document.getElementById("problem").value = "";
-    window.location.href = "emergency.html";
-  })
-  .catch((error) => {
-    console.error("Error submitting problem:", error);
-    alert("Failed to submit problem.");
-  });
-
-    
+    .then(() => {
+      alert("Problem submitted successfully!");
+      document.getElementById("problem").value = "";
+      window.location.href = "emergency.html";
+    })
+    .catch((error) => {
+      console.error("Error submitting problem:", error);
+      alert("Failed to submit problem.");
+    });
 }

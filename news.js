@@ -42,16 +42,13 @@
           tagClass = 'earthquake'; tagLabel = 'Earthquake';
         } else if (lowerText.includes('flood')) {
           tagClass = 'flood'; tagLabel = 'Flood';
-        } else if (lowerText.includes('wildfire') || lowerText.includes('wildfire')) {
+        } else if (lowerText.includes('wildfire')) {
           tagClass = 'wildfire'; tagLabel = 'Wildfire';
         } else if (lowerText.includes('cyclone')) {
           tagClass = 'cyclone'; tagLabel = 'Cyclone';
         } else if (lowerText.includes('tsunami')) {
           tagClass = 'tsunami'; tagLabel = 'Tsunami';
-        } else if(lowerText.includes('drought')) {
-          tagClass = 'drought'; tagLabel = 'drought';
-        } 
-        else{
+        } else{
           return;
         }
 

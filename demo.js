@@ -37,7 +37,6 @@ const menuIcon = document.querySelector('#menu');
         const navMenu = document.getElementById('navLinks');
 
         menuIcon.addEventListener('click', (e) => {
-            console.log(e)
             navMenu.classList.toggle('active');
         });
 

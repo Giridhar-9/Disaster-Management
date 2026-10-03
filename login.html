@@ -1,8 +1,9 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
-  <title>OTP Login</title>
+  <title>Login - CrisisGuard</title>
   <link rel="stylesheet" href="style.css">
   <style>
     * {
@@ -97,7 +98,8 @@
       text-align: center;
       margin-bottom: 20px;
     }
-    #login-box{
+
+    #login-box {
       display: flex;
       flex-direction: column;
       justify-content: center;
@@ -130,15 +132,9 @@
     button:hover {
       background-color: #0056b3;
     }
-
-    #otp-box {
-      display: none;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-    }
   </style>
 </head>
+
 <body>
   <nav>
     <div class="navCon1">
@@ -158,20 +154,19 @@
   <div class="center-container">
     <div class="form-box">
       <div id="login-box">
-        <h2>Enter Phone Number</h2>
-        <input type="tel" id="phone" placeholder="Enter 10-digit phone number" />
-        <button onclick="sendOTP()" >Send OTP</button>
-      </div>
+        <h2>Login to CrisisGuard</h2>
+        <p style="text-align: center; margin-bottom: 20px;">
+          Sign in to report a disaster or emergency.
+        </p>
 
-      <div id="otp-box">
-        <h2>Enter OTP</h2>
-        <input type="text" id="otp" placeholder="Enter OTP" />
-        <button onclick="verifyOTP()">Verify OTP</button>
+        <button id="google-login">Continue with Google</button>
       </div>
     </div>
   </div>
 
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-auth-compat.js"></script>
   <script src="script.js"></script>
-  <script src="demo.js"></script>
 </body>
+
 </html>

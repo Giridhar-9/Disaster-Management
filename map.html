@@ -5,9 +5,8 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>3D Earth - Weather, Disasters, Drought</title>
-  <script src="https://cesium.com/downloads/cesiumjs/releases/1.104/Build/Cesium/Cesium.js"></script>
-  <link href="https://cesium.com/downloads/cesiumjs/releases/1.104/Build/Cesium/Widgets/widgets.css" rel="stylesheet" />
   <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
   <style>
     html,
     body {
@@ -18,7 +17,7 @@
       overflow: hidden;
     }
 
-    #cesiumContainer {
+    #map {
       position: absolute;
       top: 70px;
       left: 0;
@@ -79,28 +78,6 @@
       justify-content: center;
     }
 
-    .legend {
-      position: absolute;
-      bottom: 30px;
-      right: 1px;
-      background: white;
-      color: black;
-      padding: 10px 14px;
-      border-radius: 6px;
-      font-size: 14px;
-      z-index: 1000;
-      line-height: 1.6;
-      box-shadow: 0 0 8px rgba(0, 0, 0, 0.3);
-    }
-
-    .legend span {
-      display: inline-block;
-      width: 14px;
-      height: 14px;
-      margin-right: 6px;
-      border-radius: 3px;
-    }
-
     #gpsButton {
       position: fixed;
       top: 80px;
@@ -153,7 +130,7 @@
       <div class="VSnav">
         <h3 onclick="window.open('index.html','_self')">CrisisGuard</h3>
       </div>
-      
+
       <div class="navLinks" id="navLinks">
         <a href="index.html">Home</a>
         <a onclick="window.open('news.html', '_blank')">News</a>
@@ -165,24 +142,22 @@
       <button class="download" onclick="window.open('login.html', '_blank')">Rescue</button>
       <img src="Images/food.png" width="30" id="menu" />
     </div>
-   
+
   </nav>
 
   <button id="gpsButton">📍 GPS</button>
-  <div id="cesiumContainer"></div>
+  <div id="map"></div>
 
-  <!-- Collapsible Legend -->
   <div class="legend" onclick="toggleLegend()">
     <strong>Legend ▼</strong>
     <div id="legendContent">
       <span style="background:red;"></span> Earthquake<br>
       <span style="background:orange;"></span> Wildfire<br>
-      <span style="background:lightblue;"></span> Rain<br>
-      <span style="background:purple;"></span> Thunderstorm<br>
-      <span style="background:yellow;"></span> Drought<br>
+      <span style="background:blue;"></span> Your Location
     </div>
   </div>
 
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
   <script>
     function toggleLegend() {
       const content = document.getElementById('legendContent');
@@ -191,152 +166,133 @@
       content.style.display = isOpen ? 'none' : 'block';
       header.innerHTML = isOpen ? 'Legend ▼' : 'Legend ▲';
     }
+    // Initialize Leaflet map
+    const map = L.map('map').setView([20, 0], 2);
 
-    Cesium.Ion.defaultAccessToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiIzNDA5MjQ2Yi02YWMwLTRlNDMtODdmZC0wZmYzMTM3MGU4ZjAiLCJpZCI6MjkzNDEzLCJpYXQiOjE3NDQ0NTQzMjZ9.iwVAVMqR7F1jpeORAEZpG2-7IWcs_X063naaD70S1Uw';
-    const OPENWEATHERMAP_KEY = 'your_api_key_here';
+    // OpenStreetMap
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: '&copy; OpenStreetMap contributors'
+    }).addTo(map);
 
-    const viewer = new Cesium.Viewer('cesiumContainer', {
-      terrainProvider: Cesium.createWorldTerrain(),
-      shouldAnimate: true,
-      baseLayerPicker: true
-    });
-
-    viewer.camera.flyTo({
-      destination: Cesium.Cartesian3.fromDegrees(0, 20, 20000000)
-    });
 
     // Earthquakes
     fetch('https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_day.geojson')
       .then(res => res.json())
       .then(data => {
+
         data.features.forEach(eq => {
+
           const [lon, lat] = eq.geometry.coordinates;
           const mag = eq.properties.mag;
           const place = eq.properties.place;
 
-          if (!isNaN(mag) && !isNaN(lat) && !isNaN(lon)) {
-            viewer.entities.add({
-              position: Cesium.Cartesian3.fromDegrees(lon, lat),
-              ellipse: {
-                semiMinorAxis: Math.max(mag * 10000, 5000),
-                semiMajorAxis: Math.max(mag * 10000, 5000),
-                material: Cesium.Color.RED.withAlpha(0.5)
-              },
-              description: `🌍 <b>Earthquake</b><br>Magnitude: ${mag}<br>${place}`
-            });
+          if (!isNaN(lat) && !isNaN(lon) && !isNaN(mag)) {
+
+            L.circleMarker([lat, lon], {
+              radius: Math.max(mag * 2, 5),
+              color: 'red',
+              fillColor: 'red',
+              fillOpacity: 0.6
+            })
+              .addTo(map)
+              .bindPopup(`
+          <b>🌍 Earthquake</b><br>
+          Magnitude: ${mag}<br>
+          ${place}
+        `);
+
           }
         });
+
+      })
+      .catch(error => {
+        console.error('Error loading earthquake data:', error);
       });
+
 
     // Wildfires
-    fetch('https://firms.modaps.eosdis.nasa.gov/data/active_fire/c6/csv/MODIS_C6_Global_24h.csv')
-      .then(res => res.text())
-      .then(text => {
-        const rows = text.trim().split('\n').slice(1);
-        rows.forEach(row => {
-          const [lat, lon] = row.split(',').map(Number);
+    const wildfireURL =
+      'https://services3.arcgis.com/T4QMspbfLg3qTGWY/arcgis/rest/services/WFIGS_Incident_Locations_Current/FeatureServer/0/query?where=1%3D1&outFields=*&outSR=4326&f=geojson';
+
+    fetch(wildfireURL)
+      .then(res => res.json())
+      .then(data => {
+
+        console.log("Wildfire data:", data);
+
+        data.features.forEach(fire => {
+
+          const coordinates = fire.geometry.coordinates;
+
+          const lon = coordinates[0];
+          const lat = coordinates[1];
+
           if (!isNaN(lat) && !isNaN(lon)) {
-            viewer.entities.add({
-              position: Cesium.Cartesian3.fromDegrees(lon, lat),
-              point: {
-                pixelSize: 6,
-                color: Cesium.Color.ORANGE.withAlpha(0.7)
-              },
-              description: "🔥 <b>Wildfire</b>"
-            });
+
+            L.circleMarker([lat, lon], {
+              radius: 6,
+              color: 'orange',
+              fillColor: 'orange',
+              fillOpacity: 0.8
+            })
+              .addTo(map)
+              .bindPopup('<b>🔥 Wildfire</b>');
+
           }
+
         });
+
+      })
+      .catch(error => {
+        console.error('Error loading wildfire data:', error);
       });
 
-    // Optional weather overlay. Add a valid OpenWeatherMap API key to enable it.
-    const weatherLocations = [
-      { lat: 51.5, lon: -0.1, name: "London" },
-      { lat: 40.7, lon: -74.0, name: "New York" },
-      { lat: 35.6, lon: 139.6, name: "Tokyo" },
-      { lat: 28.6, lon: 77.2, name: "Delhi" }
-    ];
+    // GPS
+    document.getElementById('gpsButton').addEventListener('click', () => {
 
-    if (OPENWEATHERMAP_KEY && OPENWEATHERMAP_KEY !== 'your_api_key_here') {
-      weatherLocations.forEach(loc => {
-        fetch(`https://api.openweathermap.org/data/2.5/weather?lat=${loc.lat}&lon=${loc.lon}&appid=${OPENWEATHERMAP_KEY}&units=metric`)
-          .then(res => res.json())
-          .then(data => {
-            if (!data.weather || !data.main) return;
+      if (!navigator.geolocation) {
+        alert('Geolocation is not supported by this browser.');
+        return;
+      }
 
-            const weather = data.weather[0].main.toLowerCase();
-            const temp = data.main.temp;
-            let color = null;
+      navigator.geolocation.getCurrentPosition(
 
-            if (weather.includes("rain")) color = Cesium.Color.LIGHTBLUE;
-            else if (weather.includes("thunderstorm")) color = Cesium.Color.PURPLE;
+        position => {
 
-            if (color) {
-              viewer.entities.add({
-                position: Cesium.Cartesian3.fromDegrees(loc.lon, loc.lat),
-                ellipse: {
-                  semiMinorAxis: 15000,
-                  semiMajorAxis: 15000,
-                  material: color.withAlpha(0.5)
-                },
-                description: `🌦️ <b>${loc.name}</b><br>Weather: ${weather}<br>Temp: ${temp}°C`
-              });
-            }
-          })
-          .catch(error => console.error(`Weather data error for ${loc.name}:`, error));
-      });
-    }
-
-    // Droughts
-    const droughtRegions = [
-      { lat: 28.6, lon: 77.2, region: "Delhi, India" },
-      { lat: 35.7, lon: -119.4, region: "California, USA" },
-      { lat: -33.9, lon: 18.4, region: "Cape Town, South Africa" }
-    ];
-
-    droughtRegions.forEach(d => {
-      viewer.entities.add({
-        position: Cesium.Cartesian3.fromDegrees(d.lon, d.lat),
-        ellipse: {
-          semiMinorAxis: 40000,
-          semiMajorAxis: 40000,
-          material: Cesium.Color.YELLOW.withAlpha(0.4)
-        },
-        description: `🌾 <b>Drought Region</b><br>${d.region}`
-      });
-    });
-
-    // GPS Button
-    document.getElementById("gpsButton").addEventListener("click", () => {
-      if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(function (position) {
           const lat = position.coords.latitude;
           const lon = position.coords.longitude;
 
-          viewer.camera.flyTo({
-            destination: Cesium.Cartesian3.fromDegrees(lon, lat, 50000)
-          });
-        }, () => {
-          alert("Location access denied.");
-        });
-      } else {
-        alert("Geolocation not supported.");
-      }
+          L.marker([lat, lon])
+            .addTo(map)
+            .bindPopup('<b>📍 Your Location</b>')
+            .openPopup();
+
+          map.setView([lat, lon], 10);
+
+        },
+
+        () => {
+          alert('Location access denied.');
+        }
+
+      );
+
     });
-    
-const menuIcon = document.querySelector('#menu');
-        const navMenu = document.getElementById('navLinks');
+    const menuIcon = document.querySelector('#menu');
+    const navMenu = document.getElementById('navLinks');
 
-        menuIcon.addEventListener('click', (e) => {
-            console.log(e)
-            navMenu.classList.toggle('active');
-        });
+    menuIcon.addEventListener('click', (e) => {
+      console.log(e)
+      navMenu.classList.toggle('active');
+    });
 
-        const navLinks = document.querySelectorAll('.navLinks a');
-        navLinks.forEach(link => {
-            link.addEventListener('click', () => {
-                navMenu.classList.remove('active');
-            });
-        });
+    const navLinks = document.querySelectorAll('.navLinks a');
+    navLinks.forEach(link => {
+      link.addEventListener('click', () => {
+        navMenu.classList.remove('active');
+      });
+    });
   </script>
 </body>
+
 </html>
