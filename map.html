@@ -151,7 +151,7 @@
   <nav>
     <div class="navCon1">
       <div class="VSnav">
-        <h3 onclick="window.open('index.html','_self')">CrisisGaurd</h3>
+        <h3 onclick="window.open('index.html','_self')">CrisisGuard</h3>
       </div>
       
       <div class="navLinks" id="navLinks">
@@ -248,7 +248,7 @@
         });
       });
 
-    // Weather (only Rain and Thunderstorm)
+    // Optional weather overlay. Add a valid OpenWeatherMap API key to enable it.
     const weatherLocations = [
       { lat: 51.5, lon: -0.1, name: "London" },
       { lat: 40.7, lon: -74.0, name: "New York" },
@@ -256,30 +256,35 @@
       { lat: 28.6, lon: 77.2, name: "Delhi" }
     ];
 
-    weatherLocations.forEach(loc => {
-      fetch(`https://api.openweathermap.org/data/2.5/weather?lat=${loc.lat}&lon=${loc.lon}&appid=${OPENWEATHERMAP_KEY}&units=metric`)
-        .then(res => res.json())
-        .then(data => {
-          const weather = data.weather[0].main.toLowerCase();
-          const temp = data.main.temp;
+    if (OPENWEATHERMAP_KEY && OPENWEATHERMAP_KEY !== 'your_api_key_here') {
+      weatherLocations.forEach(loc => {
+        fetch(`https://api.openweathermap.org/data/2.5/weather?lat=${loc.lat}&lon=${loc.lon}&appid=${OPENWEATHERMAP_KEY}&units=metric`)
+          .then(res => res.json())
+          .then(data => {
+            if (!data.weather || !data.main) return;
 
-          let color = null;
-          if (weather.includes("rain")) color = Cesium.Color.LIGHTBLUE;
-          else if (weather.includes("thunderstorm")) color = Cesium.Color.PURPLE;
+            const weather = data.weather[0].main.toLowerCase();
+            const temp = data.main.temp;
+            let color = null;
 
-          if (color) {
-            viewer.entities.add({
-              position: Cesium.Cartesian3.fromDegrees(loc.lon, loc.lat),
-              ellipse: {
-                semiMinorAxis: 15000,
-                semiMajorAxis: 15000,
-                material: color.withAlpha(0.5)
-              },
-              description: `🌦️ <b>${loc.name}</b><br>Weather: ${weather}<br>Temp: ${temp}°C`
-            });
-          }
-        });
-    });
+            if (weather.includes("rain")) color = Cesium.Color.LIGHTBLUE;
+            else if (weather.includes("thunderstorm")) color = Cesium.Color.PURPLE;
+
+            if (color) {
+              viewer.entities.add({
+                position: Cesium.Cartesian3.fromDegrees(loc.lon, loc.lat),
+                ellipse: {
+                  semiMinorAxis: 15000,
+                  semiMajorAxis: 15000,
+                  material: color.withAlpha(0.5)
+                },
+                description: `🌦️ <b>${loc.name}</b><br>Weather: ${weather}<br>Temp: ${temp}°C`
+              });
+            }
+          })
+          .catch(error => console.error(`Weather data error for ${loc.name}:`, error));
+      });
+    }
 
     // Droughts
     const droughtRegions = [
