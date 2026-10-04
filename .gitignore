@@ -1,0 +1,8 @@
+#environment variables
+secret.js
+
+#vscode
+.vscode/
+
+#OS files
+Thumbs.db
