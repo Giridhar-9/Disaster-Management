@@ -1,5 +1,4 @@
-    const {API_KEY} = require("./secret");
-    
+    const API_KEY = '294e2179a5ad45b784574885fab2a5d3';
     const query = '("earthquake" OR "flood" OR "wildfire" OR "tsunami" OR "cyclone")';
     const NEWS_URL = `https://newsapi.org/v2/everything?q=${encodeURIComponent(query)}&sortBy=publishedAt&language=en&pageSize=20&apiKey=${API_KEY}`;
 
