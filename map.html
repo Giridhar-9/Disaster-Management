@@ -150,11 +150,15 @@
 
   <div class="legend" onclick="toggleLegend()">
     <strong>Legend ▼</strong>
+
     <div id="legendContent">
-      <span style="background:red;"></span> Earthquake<br>
-      <span style="background:orange;"></span> Wildfire<br>
-      <span style="background:blue;"></span> Your Location
+      <span style="background:#e53935;"></span> Red alert<br>
+      <span style="background:#fb8c00;"></span> Orange alert<br>
+      <span style="background:#43a047;"></span> Green alert<br>
+      <small>Disaster types: Earthquake, Cyclone, Flood, Wildfire</small><br>
+      <small>Marker colors represent GDACS alert levels.</small>
     </div>
+
   </div>
 
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
@@ -175,77 +179,143 @@
     }).addTo(map);
 
 
-    // Earthquakes
-    fetch('https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_day.geojson')
-      .then(res => res.json())
-      .then(data => {
 
-        data.features.forEach(eq => {
+    // GDACS: Global disaster events
+    const GDACS_URL =
+      'https://www.gdacs.org/gdacsapi/api/events/geteventlist/SEARCH' +
+      '?eventlist=EQ%3BTC%3BFL%3BWF' +
+      '&alertlevel=Green%3BOrange%3BRed';
 
-          const [lon, lat] = eq.geometry.coordinates;
-          const mag = eq.properties.mag;
-          const place = eq.properties.place;
+    function escapeHTML(value) {
+      return String(value ?? '').replace(/[&<>"']/g, char => ({
+        '&': '&amp;',
+        '<': '&lt;',
+        '>': '&gt;',
+        '"': '&quot;',
+        "'": '&#39;'
+      })[char]);
+    }
 
-          if (!isNaN(lat) && !isNaN(lon) && !isNaN(mag)) {
+    function getDisasterInfo(properties) {
+      const type = String(
+        properties.eventtype || properties.eventType || ''
+      ).toUpperCase();
 
-            L.circleMarker([lat, lon], {
-              radius: Math.max(mag * 2, 5),
-              color: 'red',
-              fillColor: 'red',
-              fillOpacity: 0.6
-            })
-              .addTo(map)
-              .bindPopup(`
-          <b>🌍 Earthquake</b><br>
-          Magnitude: ${mag}<br>
-          ${place}
-        `);
+      const types = {
+        EQ: { name: 'Earthquake', emoji: '🌍' },
+        TC: { name: 'Tropical Cyclone', emoji: '🌀' },
+        FL: { name: 'Flood', emoji: '🌊' },
+        WF: { name: 'Wildfire', emoji: '🔥' }
+      };
 
+      return types[type] || {
+        name: properties.name || 'Disaster Event',
+        emoji: '⚠️'
+      };
+    }
+
+    function getAlertColor(level) {
+      switch (String(level || '').toLowerCase()) {
+        case 'red':
+          return '#e53935';
+        case 'orange':
+          return '#fb8c00';
+        case 'green':
+          return '#43a047';
+        default:
+          return '#607d8b';
+      }
+    }
+
+    async function loadGDACSEvents() {
+      try {
+        const response = await fetch(GDACS_URL);
+        if (!response.ok) {
+          throw new Error(`GDACS returned HTTP ${response.status}`);
+        }
+
+        const data = await response.json();
+        const events = Array.isArray(data.features)
+          ? data.features
+          : [];
+
+        if (events.length === 0) {
+          console.warn('No GDACS events found. Check the API response.');
+          return;
+        }
+
+        events.forEach(event => {
+          const properties = event.properties || {};
+          const coordinates = event.geometry?.coordinates;
+
+          if (
+            event.geometry?.type !== 'Point' ||
+            !Array.isArray(coordinates) ||
+            coordinates.length < 2
+          ) {
+            return;
           }
+
+          // GeoJSON uses [longitude, latitude].
+          const [lon, lat] = coordinates;
+
+          if (
+            !Number.isFinite(lat) ||
+            !Number.isFinite(lon) ||
+            lat < -90 || lat > 90 ||
+            lon < -180 || lon > 180
+          ) {
+            return;
+          }
+
+          const disaster = getDisasterInfo(properties);
+          const alertLevel = properties.alertlevel || 'Unknown';
+          const color = getAlertColor(alertLevel);
+
+          const eventName =
+            properties.name ||
+            properties.title ||
+            disaster.name;
+
+          const country = properties.country || 'Not specified';
+          const severity =
+            properties.severitytext ||
+            properties.severity ||
+            'Not specified';
+
+          const date =
+            properties.fromdate ||
+            properties.date ||
+            'Not specified';
+
+          const popup = `
+            <strong>${escapeHTML(disaster.emoji)} ${escapeHTML(disaster.name)}</strong><br>
+            <b>Event:</b> ${escapeHTML(eventName)}<br>
+            <b>Country:</b> ${escapeHTML(country)}<br>
+            <b>Alert:</b> ${escapeHTML(alertLevel)}<br>
+            <b>Severity:</b> ${escapeHTML(severity)}<br>
+            <b>Date:</b> ${escapeHTML(date)}
+          `;
+
+          L.circleMarker([lat, lon], {
+            radius: 7,
+            color: color,
+            fillColor: color,
+            fillOpacity: 0.75,
+            weight: 2
+          })
+            .addTo(map)
+            .bindPopup(popup);
         });
 
-      })
-      .catch(error => {
-        console.error('Error loading earthquake data:', error);
-      });
+        console.log(`GDACS returned ${events.length} events.`);
+      } catch (error) {
+        console.error('Error loading GDACS events:', error);
+      }
+    }
 
+    loadGDACSEvents();
 
-    // Wildfires
-    const wildfireURL =
-      'https://services3.arcgis.com/T4QMspbfLg3qTGWY/arcgis/rest/services/WFIGS_Incident_Locations_Current/FeatureServer/0/query?where=1%3D1&outFields=*&outSR=4326&f=geojson';
-
-    fetch(wildfireURL)
-      .then(res => res.json())
-      .then(data => {
-
-        console.log("Wildfire data:", data);
-
-        data.features.forEach(fire => {
-
-          const coordinates = fire.geometry.coordinates;
-
-          const lon = coordinates[0];
-          const lat = coordinates[1];
-
-          if (!isNaN(lat) && !isNaN(lon)) {
-
-            L.circleMarker([lat, lon], {
-              radius: 6,
-              color: 'orange',
-              fillColor: 'orange',
-              fillOpacity: 0.8
-            })
-              .addTo(map)
-              .bindPopup('<b>🔥 Wildfire</b>');
-
-          }
-
-        });
-
-      })
-      .catch(error => {
-        console.error('Error loading wildfire data:', error);
-      });
 
     // GPS
     document.getElementById('gpsButton').addEventListener('click', () => {
