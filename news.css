@@ -130,9 +130,52 @@ body {
     color: #ffffff;
   }
 
+.pagination {
+    margin-top: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
 
 button {
     padding: 10px 15px;
     margin: 0 5px;
     cursor: pointer;
+}
+
+.feed-intro {
+    max-width: 760px;
+    margin: -8px auto 24px;
+    text-align: center;
+    color: #c9d1e0;
+    line-height: 1.6;
+}
+
+.event-meta {
+    margin: 0 0 12px;
+    color: #687386;
+    font-size: 0.82rem;
+    overflow-wrap: anywhere;
+}
+
+.news-empty {
+    grid-column: 1 / -1;
+    color: #fff;
+    text-align: center;
+    padding: 24px;
+}
+
+#loading {
+    line-height: 1.6;
+}
+
+.pagination button:disabled {
+    cursor: not-allowed;
+    opacity: 0.5;
+}
+
+@media (max-width: 600px) {
+    .container { padding: 14px; margin: 24px auto; }
+    #search-input { width: 100%; max-width: 100%; }
+    .pagination { gap: 8px; flex-wrap: wrap; }
 }
