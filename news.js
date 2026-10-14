@@ -1,6 +1,8 @@
-const GDACS_URL = 'https://www.gdacs.org/gdacsapi/api/events/geteventlist/SEARCH?eventlist=EQ%3BTC%3BFL%3BWF&alertlevel=Green%3BOrange%3BRed';
-const USGS_URL = 'https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_day.geojson';
+const GDACS_URL =
+  'https://www.gdacs.org/gdacsapi/api/events/geteventlist/SEARCH?eventlist=EQ%3BTC%3BFL%3BWF&alertlevel=Green%3BOrange%3BRed';
+
 const PAGE_SIZE = 9;
+
 let allEvents = [];
 let currentPage = 1;
 
@@ -12,162 +14,304 @@ const nextButton = document.getElementById('next');
 const pageInfo = document.getElementById('page-info');
 
 function getEventType(event) {
-  const raw = String(event.type || event.eventtype || event.properties?.eventtype || '').toUpperCase();
-  const text = `${event.title || ''} ${event.name || ''}`.toLowerCase();
-  if (raw.includes('EQ') || text.includes('earthquake')) return { label: 'Earthquake', className: 'earthquake' };
-  if (raw.includes('TC') || raw.includes('CY') || text.includes('tropical cyclone')) return { label: 'Cyclone', className: 'cyclone' };
-  if (raw.includes('FL') || text.includes('flood')) return { label: 'Flood', className: 'flood' };
-  if (raw.includes('WF') || text.includes('wildfire') || text.includes('forest fire')) return { label: 'Wildfire', className: 'wildfire' };
-  if (raw.includes('TS') || text.includes('tsunami')) return { label: 'Tsunami', className: 'tsunami' };
+  const rawType = String(
+    event.eventtype || event.eventType || event.type || ''
+  ).toUpperCase();
+
+  if (rawType === 'EQ' || rawType.includes('EARTHQUAKE')) {
+    return { label: 'Earthquake', className: 'earthquake' };
+  }
+
+  if (
+    rawType === 'TC' ||
+    rawType === 'CY' ||
+    rawType.includes('CYCLONE')
+  ) {
+    return { label: 'Cyclone', className: 'cyclone' };
+  }
+
+  if (rawType === 'FL' || rawType.includes('FLOOD')) {
+    return { label: 'Flood', className: 'flood' };
+  }
+
+  if (
+    rawType === 'WF' ||
+    rawType.includes('WILDFIRE') ||
+    rawType.includes('FIRE')
+  ) {
+    return { label: 'Wildfire', className: 'wildfire' };
+  }
+
   return { label: 'Disaster event', className: 'default' };
 }
 
-function normalizeGdacs(item) {
-  const p = item.properties || item;
-  const coords = item.geometry?.coordinates;
-  const type = getEventType({ ...p, type: p.eventtype || p.eventType || p.type });
-  const title = p.name || p.title || `${type.label} event`;
-  return {
-    id: String(p.eventid || p.id || item.id || `${title}-${p.fromdate || p.tostring || ''}`),
-    title,
-    description: p.description || p.alertlevelname || p.alertlevel || 'Disaster event reported by GDACS.',
-    date: p.fromdate || p.tostring || p.to || p.datemodified || p.date || null,
-    url: p.url || p.htmllink || p.link || 'https://www.gdacs.org/',
-    type,
-    source: 'GDACS',
-    magnitude: p.severitydata?.severity || p.severity || null,
-    alert: p.alertlevelname || p.alertlevel || null,
-    coordinates: Array.isArray(coords) ? coords.slice(0, 2) : null
-  };
-}
+function normalizeEvent(item) {
+  const properties = item.properties || item;
 
-function normalizeUsgs(feature) {
-  const p = feature.properties || {};
-  const coords = feature.geometry?.coordinates || [];
-  return {
-    id: `USGS-${feature.id || p.code || p.time}`,
-    title: p.title || 'Earthquake detected',
-    description: `Magnitude ${p.mag ?? 'unknown'} earthquake${p.place ? ` near ${p.place}` : ''}.`,
-    date: p.time ? new Date(p.time).toISOString() : null,
-    url: p.url || 'https://earthquake.usgs.gov/earthquakes/map/',
-    type: { label: 'Earthquake', className: 'earthquake' },
-    source: 'USGS',
-    magnitude: p.mag,
-    alert: p.alert || null,
-    coordinates: coords.length >= 2 ? coords.slice(0, 2) : null
-  };
-}
-
-async function fetchJson(url) {
-  const response = await fetch(url, { headers: { Accept: 'application/json' } });
-  if (!response.ok) throw new Error(`Request failed (${response.status})`);
-  return response.json();
-}
-
-async function fetchDisasterNews() {
-  loading.style.display = 'block';
-  loading.textContent = 'Loading live disaster events…';
-  const results = await Promise.allSettled([fetchJson(GDACS_URL), fetchJson(USGS_URL)]);
-  let gdacsEvents = [];
-  let usgsEvents = [];
-
-  if (results[0].status === 'fulfilled') {
-    const data = results[0].value;
-    const items = Array.isArray(data.features) ? data.features : Array.isArray(data) ? data : (data.events || data.eventlist || []);
-    gdacsEvents = items.map(normalizeGdacs);
-  }
-  if (results[1].status === 'fulfilled') {
-    usgsEvents = (results[1].value.features || []).map(normalizeUsgs);
-  }
-
-  // Prefer GDACS for global multi-hazard alerts; use USGS for detailed earthquake coverage.
-  const unique = new Map();
-  [...gdacsEvents, ...usgsEvents].forEach(event => {
-    if (!event.title || !event.url) return;
-    const key = event.id || `${event.title}-${event.date}`;
-    unique.set(key, event);
+  const eventType = getEventType({
+    eventtype:
+      properties.eventtype ||
+      properties.eventType ||
+      properties.type
   });
-  allEvents = [...unique.values()].sort((a, b) => new Date(b.date || 0) - new Date(a.date || 0));
-  loading.style.display = 'none';
-  if (!allEvents.length) {
-    loading.style.display = 'block';
-    loading.textContent = 'Live disaster data could not be loaded. Check your connection or try again later.';
-    container.innerHTML = '';
-    updatePagination(0);
-    return;
+
+  const title =
+    properties.name ||
+    properties.title ||
+    `${eventType.label} event`;
+
+  const rawDate =
+    properties.fromdate ||
+    properties.tostring ||
+    properties.to ||
+    properties.datemodified ||
+    properties.date ||
+    null;
+
+  const rawUrl =
+    properties.url ||
+    properties.htmllink ||
+    properties.link ||
+    'https://www.gdacs.org/';
+
+  let safeUrl = 'https://www.gdacs.org/';
+
+  try {
+    const parsedUrl = new URL(rawUrl);
+
+    if (
+      parsedUrl.protocol === 'https:' ||
+      parsedUrl.protocol === 'http:'
+    ) {
+      safeUrl = parsedUrl.href;
+    }
+  } catch {
+    // Keep the safe GDACS fallback URL.
   }
-  renderEvents();
+
+  return {
+    id: String(
+      properties.eventid ||
+      properties.id ||
+      item.id ||
+      `${title}-${rawDate || ''}`
+    ),
+    title,
+    description:
+      properties.description ||
+      properties.alertlevelname ||
+      properties.alertlevel ||
+      'Disaster event reported by GDACS.',
+    date: rawDate,
+    url: safeUrl,
+    type: eventType,
+    alert:
+      properties.alertlevelname ||
+      properties.alertlevel ||
+      null,
+    severity:
+      properties.severitydata?.severity ??
+      properties.severity ??
+      null
+  };
 }
 
-function safeExternalUrl(value) {
+async function fetchDisasterEvents() {
+  loading.style.display = 'block';
+  loading.textContent = 'Loading disaster events from GDACS...';
+  container.replaceChildren();
+
   try {
-    const url = new URL(value);
-    return ['https:', 'http:'].includes(url.protocol) ? url.href : 'https://www.gdacs.org/';
-  } catch {
-    return 'https://www.gdacs.org/';
+    const response = await fetch(GDACS_URL, {
+      headers: { Accept: 'application/json' }
+    });
+
+    if (!response.ok) {
+      throw new Error(`GDACS request failed: ${response.status}`);
+    }
+
+    const data = await response.json();
+
+    const items = Array.isArray(data.features)
+      ? data.features
+      : Array.isArray(data)
+        ? data
+        : Array.isArray(data.events)
+          ? data.events
+          : Array.isArray(data.eventlist)
+            ? data.eventlist
+            : [];
+
+    const uniqueEvents = new Map();
+
+    items.forEach(item => {
+      const event = normalizeEvent(item);
+
+      if (event.title) {
+        uniqueEvents.set(event.id, event);
+      }
+    });
+
+    allEvents = [...uniqueEvents.values()].sort((a, b) => {
+      const dateA = a.date ? new Date(a.date).getTime() : 0;
+      const dateB = b.date ? new Date(b.date).getTime() : 0;
+
+      return dateB - dateA;
+    });
+
+    currentPage = 1;
+    loading.style.display = 'none';
+
+    renderEvents();
+  } catch (error) {
+    console.error('Unable to load GDACS events:', error);
+
+    loading.style.display = 'block';
+    loading.textContent =
+      'Unable to load disaster events right now. Please check your internet connection or try again later.';
+
+    container.replaceChildren();
+    updatePagination(0);
   }
 }
 
 function renderEvents() {
   const keyword = searchInput.value.trim().toLowerCase();
-  const filtered = allEvents.filter(event =>
-    `${event.title} ${event.description} ${event.type.label} ${event.source} ${event.alert || ''}`.toLowerCase().includes(keyword)
+
+  const filteredEvents = allEvents.filter(event => {
+    const searchableText = [
+      event.title,
+      event.description,
+      event.type.label,
+      event.alert || '',
+      event.severity ?? ''
+    ].join(' ').toLowerCase();
+
+    return searchableText.includes(keyword);
+  });
+
+  const totalPages = Math.max(
+    1,
+    Math.ceil(filteredEvents.length / PAGE_SIZE)
   );
-  const totalPages = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE));
+
   currentPage = Math.min(currentPage, totalPages);
-  const start = (currentPage - 1) * PAGE_SIZE;
+
+  const startIndex = (currentPage - 1) * PAGE_SIZE;
+  const pageEvents = filteredEvents.slice(
+    startIndex,
+    startIndex + PAGE_SIZE
+  );
+
   container.replaceChildren();
 
-  if (!filtered.length) {
-    const empty = document.createElement('p');
-    empty.className = 'news-empty';
-    empty.textContent = 'No matching disaster events found.';
-    container.appendChild(empty);
+  if (filteredEvents.length === 0) {
+    const emptyMessage = document.createElement('p');
+    emptyMessage.className = 'news-empty';
+    emptyMessage.textContent = keyword
+      ? 'No matching disaster events found.'
+      : 'No disaster events are currently available from GDACS.';
+
+    container.appendChild(emptyMessage);
   }
 
-  filtered.slice(start, start + PAGE_SIZE).forEach(event => {
+  pageEvents.forEach(event => {
     const card = document.createElement('article');
     card.className = 'news-card';
+
     const title = document.createElement('h2');
     title.textContent = event.title;
+
     const date = document.createElement('div');
     date.className = 'date-time';
+
     const parsedDate = event.date ? new Date(event.date) : null;
-    date.textContent = parsedDate && !Number.isNaN(parsedDate.getTime()) ? parsedDate.toLocaleString() : 'Date not provided';
+
+    date.textContent =
+      parsedDate && !Number.isNaN(parsedDate.getTime())
+        ? parsedDate.toLocaleString()
+        : 'Date not provided';
+
     const description = document.createElement('p');
     description.textContent = event.description;
-    const meta = document.createElement('p');
-    meta.className = 'event-meta';
-    meta.textContent = [event.source, event.alert ? `Alert: ${event.alert}` : '', event.magnitude !== null && event.magnitude !== undefined ? `Magnitude/severity: ${event.magnitude}` : ''].filter(Boolean).join(' · ');
-    const link = document.createElement('a');
-    link.href = safeExternalUrl(event.url);
-    link.target = '_blank';
-    link.rel = 'noopener noreferrer';
-    link.textContent = 'View official details';
+
+    const metadata = document.createElement('p');
+    metadata.className = 'event-meta';
+
+    const details = ['Source: GDACS'];
+
+    if (event.alert) {
+      details.push(`Alert: ${event.alert}`);
+    }
+
+    if (
+      event.severity !== null &&
+      event.severity !== undefined &&
+      event.severity !== ''
+    ) {
+      details.push(`Severity: ${event.severity}`);
+    }
+
+    metadata.textContent = details.join(' · ');
+
     const tag = document.createElement('span');
     tag.className = `tag ${event.type.className}`;
     tag.textContent = event.type.label;
-    card.append(title, date, description, meta, link, document.createElement('br'), tag);
+
+    const link = document.createElement('a');
+    link.href = event.url;
+    link.target = '_blank';
+    link.rel = 'noopener noreferrer';
+    link.textContent = 'View official details';
+
+    card.append(
+      title,
+      date,
+      description,
+      metadata,
+      link,
+      document.createElement('br'),
+      tag
+    );
+
     container.appendChild(card);
   });
-  updatePagination(filtered.length);
+
+  updatePagination(filteredEvents.length);
 }
 
 function updatePagination(filteredCount) {
-  const totalPages = Math.max(1, Math.ceil(filteredCount / PAGE_SIZE));
-  prevButton.disabled = currentPage <= 1 || filteredCount === 0;
-  nextButton.disabled = currentPage >= totalPages || filteredCount === 0;
-  pageInfo.textContent = filteredCount ? `Page ${currentPage} of ${totalPages} · ${filteredCount} events` : '0 events';
+  const totalPages = Math.max(
+    1,
+    Math.ceil(filteredCount / PAGE_SIZE)
+  );
+
+  prevButton.disabled =
+    currentPage <= 1 || filteredCount === 0;
+
+  nextButton.disabled =
+    currentPage >= totalPages || filteredCount === 0;
+
+  pageInfo.textContent = filteredCount
+    ? `Page ${currentPage} of ${totalPages} · ${filteredCount} events`
+    : '0 events';
 }
 
 searchInput.addEventListener('input', () => {
   currentPage = 1;
   renderEvents();
 });
-prevButton.addEventListener('click', () => { if (currentPage > 1) { currentPage--; renderEvents(); } });
-nextButton.addEventListener('click', () => { currentPage++; renderEvents(); });
-fetchDisasterNews().catch(error => {
-  console.error('Unable to load disaster data:', error);
-  loading.style.display = 'block';
-  loading.textContent = 'Unable to load disaster data right now. Please try again later.';
+
+prevButton.addEventListener('click', () => {
+  if (currentPage > 1) {
+    currentPage--;
+    renderEvents();
+  }
 });
+
+nextButton.addEventListener('click', () => {
+  currentPage++;
+  renderEvents();
+});
+
+fetchDisasterEvents();
